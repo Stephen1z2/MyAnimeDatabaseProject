@@ -1,0 +1,23 @@
+# MyAnimeList Database Project - Local Python Dependencies
+# Use this file when running the project on your local computer
+# Install with: pip install -r requirements.txt.local
+
+# Web Framework
+streamlit>=1.28.0
+
+# Database
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0
+
+# Data Processing
+pandas>=2.0.0
+
+# Data Visualization
+plotly>=5.18.0
+
+# API Clients
+requests>=2.31.0
+huggingface-hub>=0.19.0
+
+# Environment Variables
+python-dotenv>=1.0.0

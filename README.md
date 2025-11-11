@@ -11,6 +11,12 @@ This project demonstrates:
 - **Data Visualization**: Interactive Streamlit dashboard for database exploration
 - **Search Functionality**: Advanced search and filtering capabilities
 
+## Quick Start
+
+- **Running on Replit**: The app is already configured and ready to run
+- **Running Locally**: See [LOCAL_SETUP.md](LOCAL_SETUP.md) for detailed instructions on setting up the project on your computer
+- **GitHub Setup**: See [GIT_SETUP.md](GIT_SETUP.md) for instructions on pushing to GitHub
+
 ## Database Schema
 
 ### Tables
