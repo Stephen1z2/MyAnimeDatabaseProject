@@ -60,7 +60,7 @@ if sidebar_option == "Database Overview":
                 ])
                 stats_df = stats_df.sort_values("Row Count", ascending=False)
                 
-                st.dataframe(stats_df, use_container_width=True, hide_index=True)
+                st.dataframe(stats_df, width="stretch", hide_index=True)
                 
                 fig = px.bar(
                     stats_df, 
@@ -70,7 +70,7 @@ if sidebar_option == "Database Overview":
                     color="Row Count",
                     color_continuous_scale="Viridis"
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
                 
             except Exception as e:
                 st.error(f"Error fetching table counts: {e}")
@@ -156,7 +156,7 @@ elif sidebar_option == "Database Schema":
                         }
                         for col in info['columns']
                     ])
-                    st.dataframe(cols_df, use_container_width=True, hide_index=True)
+                    st.dataframe(cols_df, width="stretch", hide_index=True)
                     
                     if info['foreign_keys']:
                         st.write("**Foreign Keys:**")
@@ -167,7 +167,7 @@ elif sidebar_option == "Database Schema":
                             }
                             for fk in info['foreign_keys']
                         ])
-                        st.dataframe(fk_df, use_container_width=True, hide_index=True)
+                        st.dataframe(fk_df, width="stretch", hide_index=True)
                     
                     if info['indexes']:
                         st.write("**Indexes:**")
@@ -179,7 +179,7 @@ elif sidebar_option == "Database Schema":
                             }
                             for idx in info['indexes']
                         ])
-                        st.dataframe(idx_df, use_container_width=True, hide_index=True)
+                        st.dataframe(idx_df, width="stretch", hide_index=True)
     else:
         st.warning("Please initialize the database first from the Database Overview page.")
 
@@ -245,6 +245,55 @@ elif sidebar_option == "Data Ingestion":
                     with st.spinner(f"Fetching page {page_num}..."):
                         count = ingest_top_anime(page=page_num)
                     st.success(f"Ingested {count} anime from page {page_num}!")
+            
+            # Character ingestion section
+            st.subheader("Character Data Ingestion")
+            
+            char_col1, char_col2 = st.columns(2)
+            
+            with char_col1:
+                num_anime_chars = st.number_input("Number of anime to process", min_value=1, max_value=100, value=25, 
+                                                key="char_anime_count")
+                st.info(f"Will ingest characters for top {num_anime_chars} ranked anime")
+                
+            with char_col2:
+                if st.button("Ingest Characters", type="secondary"):
+                    session = get_session()
+                    anime_list = session.query(Anime).order_by(Anime.rank.asc()).limit(num_anime_chars).all()
+                    session.close()
+                    
+                    if not anime_list:
+                        st.error("No anime found! Please ingest anime data first.")
+                    else:
+                        progress_bar = st.progress(0)
+                        status_text = st.empty()
+                        
+                        total_characters = 0
+                        
+                        for i, anime in enumerate(anime_list):
+                            status_text.text(f"Processing {anime.title} ({i+1}/{len(anime_list)})")
+                            progress = (i + 1) / len(anime_list)
+                            progress_bar.progress(progress)
+                            
+                            try:
+                                from jikan_ingestion import ingest_anime_characters
+                                count = ingest_anime_characters(anime.mal_id)
+                                total_characters += count
+                                
+                                # Small delay for API rate limiting
+                                import time
+                                time.sleep(1.2)
+                                
+                            except Exception as e:
+                                st.warning(f"Error processing {anime.title}: {e}")
+                        
+                        progress_bar.empty()
+                        status_text.empty()
+                        
+                        if total_characters > 0:
+                            st.success(f"Successfully ingested {total_characters} characters from {len(anime_list)} anime!")
+                        else:
+                            st.warning("No characters were ingested. Check if anime data exists.")
 
 elif sidebar_option == "Search Anime":
     st.header("🔍 Search Anime Database")
@@ -345,16 +394,59 @@ elif sidebar_option == "Data Explorer":
         with explorer_tabs[0]:
             st.subheader("Anime Data")
             
-            anime_data = session.query(
+            # Add controls for pagination and filtering
+            col1, col2, col3 = st.columns([2, 1, 1])
+            
+            with col1:
+                records_per_page = st.selectbox(
+                    "Records per page", 
+                    [50, 100, 250, 500, "All"], 
+                    index=1
+                )
+            
+            with col2:
+                sort_by = st.selectbox(
+                    "Sort by",
+                    ["Title", "Score", "Rank", "Year", "Episodes"],
+                    index=1  # Default to Score
+                )
+            
+            with col3:
+                sort_order = st.selectbox("Order", ["Descending", "Ascending"])
+            
+            # Build the query
+            query = session.query(
                 Anime.id, Anime.title, Anime.type, Anime.episodes, 
                 Anime.score, Anime.rank, Anime.status, Anime.year
-            ).limit(100).all()
+            )
+            
+            # Apply sorting
+            sort_column = {
+                "Title": Anime.title,
+                "Score": Anime.score, 
+                "Rank": Anime.rank,
+                "Year": Anime.year,
+                "Episodes": Anime.episodes
+            }[sort_by]
+            
+            if sort_order == "Descending":
+                query = query.order_by(sort_column.desc())
+            else:
+                query = query.order_by(sort_column.asc())
+            
+            # Apply limit
+            if records_per_page != "All":
+                query = query.limit(records_per_page)
+            
+            anime_data = query.all()
             
             if anime_data:
                 df = pd.DataFrame(anime_data, columns=[
                     'ID', 'Title', 'Type', 'Episodes', 'Score', 'Rank', 'Status', 'Year'
                 ])
-                st.dataframe(df, use_container_width=True, hide_index=True)
+                
+                st.info(f"Showing {len(anime_data)} anime records")
+                st.dataframe(df, width='stretch', hide_index=True)
             else:
                 st.info("No anime data available. Please ingest data first.")
         
@@ -374,11 +466,11 @@ elif sidebar_option == "Data Explorer":
                 col1, col2 = st.columns([1, 1])
                 
                 with col1:
-                    st.dataframe(df, use_container_width=True, hide_index=True)
+                    st.dataframe(df, width="stretch", hide_index=True)
                 
                 with col2:
                     fig = px.pie(df, values='Anime Count', names='Genre', title='Anime Distribution by Genre')
-                    st.plotly_chart(fig, use_container_width=True)
+                    st.plotly_chart(fig, width="stretch")
             else:
                 st.info("No genre data available.")
         
@@ -395,11 +487,11 @@ elif sidebar_option == "Data Explorer":
             if studio_stats:
                 df = pd.DataFrame(studio_stats, columns=['Studio', 'Anime Count'])
                 
-                st.dataframe(df, use_container_width=True, hide_index=True)
+                st.dataframe(df, width="stretch", hide_index=True)
                 
                 fig = px.bar(df, x='Studio', y='Anime Count', title='Top Studios by Anime Count')
                 fig.update_xaxes(tickangle=45)
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
             else:
                 st.info("No studio data available.")
         
@@ -413,7 +505,7 @@ elif sidebar_option == "Data Explorer":
             
             if char_data:
                 df = pd.DataFrame(char_data, columns=['Character Name', 'Role', 'Anime'])
-                st.dataframe(df, use_container_width=True, hide_index=True)
+                st.dataframe(df, width="stretch", hide_index=True)
             else:
                 st.info("No character data available.")
         
@@ -426,7 +518,7 @@ elif sidebar_option == "Data Explorer":
             
             if ml_data:
                 df = pd.DataFrame(ml_data, columns=['Anime', 'Predicted Category', 'Predicted Rating'])
-                st.dataframe(df, use_container_width=True, hide_index=True)
+                st.dataframe(df, width="stretch", hide_index=True)
                 
                 category_counts = session.query(
                     MLFeature.synopsis_category,
@@ -436,7 +528,7 @@ elif sidebar_option == "Data Explorer":
                 if category_counts:
                     cat_df = pd.DataFrame(category_counts, columns=['Category', 'Count'])
                     fig = px.bar(cat_df, x='Category', y='Count', title='ML Predicted Categories')
-                    st.plotly_chart(fig, use_container_width=True)
+                    st.plotly_chart(fig, width="stretch")
             else:
                 st.info("No ML features generated yet. Use the ML Features page to generate them.")
         
@@ -498,7 +590,7 @@ elif sidebar_option == "ML Features":
             df = pd.DataFrame(recent_ml, columns=[
                 'Anime', 'Predicted Category', 'Predicted Rating', 'Created At'
             ])
-            st.dataframe(df, use_container_width=True, hide_index=True)
+            st.dataframe(df, width="stretch", hide_index=True)
         else:
             st.info("No ML features generated yet.")
         
@@ -534,7 +626,7 @@ elif sidebar_option == "Analytics":
                     xaxis_title='Score',
                     yaxis_title='Count'
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
                 
                 avg_score = sum(score_list) / len(score_list)
                 st.metric("Average Score", f"{avg_score:.2f}")
@@ -553,7 +645,7 @@ elif sidebar_option == "Analytics":
                 df = pd.DataFrame(year_data, columns=['Year', 'Count'])
                 
                 fig = px.line(df, x='Year', y='Count', title='Anime Released by Year', markers=True)
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
             else:
                 st.info("No year data available.")
         
@@ -576,7 +668,7 @@ elif sidebar_option == "Analytics":
                 fig = px.bar(df, x='Anime', y='Times Recommended', 
                            title='Most Recommended Anime')
                 fig.update_xaxes(tickangle=45)
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
             else:
                 st.info("No recommendation data available.")
         

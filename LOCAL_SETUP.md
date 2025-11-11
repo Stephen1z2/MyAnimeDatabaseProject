@@ -153,7 +153,6 @@ MyNewDatabaseAttempt/
 ├── pyproject.toml           # Project configuration
 ├── .env                     # Environment variables (create this)
 ├── README.md                # Project documentation
-├── GIT_SETUP.md             # GitHub setup guide
 └── LOCAL_SETUP.md           # This file - local setup guide
 ```
 
