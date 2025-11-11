@@ -13,7 +13,6 @@ This project demonstrates:
 
 ## Quick Start
 
-- **Running on Replit**: The app is already configured and ready to run
 - **Running Locally**: See [LOCAL_SETUP.md](LOCAL_SETUP.md) for detailed instructions on setting up the project on your computer
 - **GitHub Setup**: See [GIT_SETUP.md](GIT_SETUP.md) for instructions on pushing to GitHub
 
@@ -139,9 +138,8 @@ This project demonstrates:
 - Internet connection (for API calls)
 
 ### Environment Variables
-The following environment variables are automatically configured by Replit:
-- `DATABASE_URL` - PostgreSQL connection string
-- `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`, `PGDATABASE`
+Configure the following environment variables:
+- `DATABASE_URL` - PostgreSQL connection string (required)
 
 **Optional Environment Variables:**
 - `HUGGINGFACE_TOKEN` or `HF_TOKEN` - Hugging Face API token for ML features

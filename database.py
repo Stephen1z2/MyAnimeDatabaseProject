@@ -5,21 +5,30 @@ from models import Base
 import streamlit as st
 
 def get_database_url():
-    return os.environ.get('DATABASE_URL')
+    # For testing purposes, use SQLite if DATABASE_URL not set
+    database_url = os.environ.get('DATABASE_URL')
+    if not database_url:
+        return "sqlite:///anime_db.sqlite"
+    return database_url
 
 @st.cache_resource
 def get_engine():
     database_url = get_database_url()
-    if not database_url:
-        raise ValueError("DATABASE_URL environment variable not set")
     
-    engine = create_engine(
-        database_url,
-        pool_size=5,
-        max_overflow=10,
-        pool_pre_ping=True,
-        echo=False
-    )
+    # Adjust engine parameters based on database type
+    if database_url.startswith('sqlite'):
+        engine = create_engine(
+            database_url,
+            echo=False
+        )
+    else:
+        engine = create_engine(
+            database_url,
+            pool_size=5,
+            max_overflow=10,
+            pool_pre_ping=True,
+            echo=False
+        )
     return engine
 
 @st.cache_resource

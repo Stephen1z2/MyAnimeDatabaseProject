@@ -1,10 +1,10 @@
 # GitHub Setup Instructions
 
-Since Git operations are restricted in the Replit environment, please follow these steps to push your code to GitHub:
+Follow these steps to push your code to GitHub:
 
-## Step 1: Open the Shell
+## Step 1: Open Terminal/Command Prompt
 
-Click on the "Shell" tab in Replit.
+Open a terminal or command prompt in your project directory.
 
 ## Step 2: Configure Git (if not already done)
 

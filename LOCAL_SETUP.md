@@ -25,13 +25,6 @@ git clone https://github.com/Stephen1z2/MyNewDatabaseAttempt.git
 cd MyNewDatabaseAttempt
 ```
 
-### Option B: Download from Replit
-1. In Replit, go to the Shell tab
-2. Run: `zip -r project.zip .`
-3. Download the `project.zip` file
-4. Extract it on your local computer
-5. Open a terminal/command prompt and navigate to the extracted folder
-
 ## Step 2: Set Up Python Virtual Environment (Recommended)
 
 This keeps your project dependencies isolated from other Python projects.
@@ -157,7 +150,7 @@ MyNewDatabaseAttempt/
 ├── jikan_ingestion.py        # Jikan API data ingestion
 ├── ml_features.py            # Hugging Face ML integration
 ├── requirements.txt.local    # Python dependencies for local setup
-├── pyproject.toml           # Replit configuration
+├── pyproject.toml           # Project configuration
 ├── .env                     # Environment variables (create this)
 ├── README.md                # Project documentation
 ├── GIT_SETUP.md             # GitHub setup guide
