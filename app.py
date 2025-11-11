@@ -4,7 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from sqlalchemy import func, inspect
 from database import init_database, check_tables_exist, get_table_info, get_table_counts, get_session
-from models import Anime, Genre, Studio, Theme, Character, Review, Recommendation, MLFeature, AnimeCharacter
+from models import Anime, Genre, Studio, Theme, Character, Review, Recommendation, MLFeature, AnimeCharacter, anime_genres, anime_studios
 from jikan_ingestion import run_full_ingestion, ingest_top_anime, ingest_genres
 from ml_features import batch_process_ml_features
 import time
@@ -398,7 +398,7 @@ elif sidebar_option == "Data Explorer":
                 st.dataframe(df, use_container_width=True, hide_index=True)
                 
                 fig = px.bar(df, x='Studio', y='Anime Count', title='Top Studios by Anime Count')
-                fig.update_xaxis(tickangle=45)
+                fig.update_xaxes(tickangle=45)
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.info("No studio data available.")
@@ -575,7 +575,7 @@ elif sidebar_option == "Analytics":
                 
                 fig = px.bar(df, x='Anime', y='Times Recommended', 
                            title='Most Recommended Anime')
-                fig.update_xaxis(tickangle=45)
+                fig.update_xaxes(tickangle=45)
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.info("No recommendation data available.")
