@@ -110,10 +110,10 @@ This project demonstrates:
 ## Technology Stack
 
 ### Backend
-- **Python 3.11**
-- **PostgreSQL** - Relational database
+- **Python 3.11+**
+- **SQLite** - Local relational database (for development/demo)
 - **SQLAlchemy 2.0** - ORM and database toolkit
-- **psycopg2** - PostgreSQL adapter
+- **Built-in database** - No external database installation required
 
 ### APIs & Data Sources
 - **Jikan API v4** - MyAnimeList data (open-source, no key required)
@@ -133,13 +133,15 @@ This project demonstrates:
 
 ### Prerequisites
 - Python 3.11+
-- PostgreSQL database
 - Internet connection (for API calls)
 
-### Environment Variables
-Configure the following environment variables:
-- `DATABASE_URL` - PostgreSQL connection string (required)
+### Database Setup
+This project uses **SQLite** for easy setup and portability:
+- **No database installation required** - SQLite is included with Python
+- **Database file**: `anime_db.sqlite` (automatically created)
+- **Ready to run** - No configuration needed
 
+### Environment Variables
 **Optional Environment Variables:**
 - `HUGGINGFACE_TOKEN` or `HF_TOKEN` - Hugging Face API token for ML features
   - The ML features will work with the free Hugging Face Inference API
@@ -151,15 +153,21 @@ Configure the following environment variables:
 
 1. Install dependencies:
 ```bash
-uv sync
+pip install -r requirements.txt.local
 ```
 
 2. Run the Streamlit application:
 ```bash
-streamlit run app.py --server.port 5000
+streamlit run app.py
 ```
 
-3. Access the application at `http://localhost:5000`
+3. Access the application at `http://localhost:8501`
+
+### What Happens on First Run
+- SQLite database (`anime_db.sqlite`) is automatically created
+- Database tables are initialized
+- Application is ready for data ingestion
+- **No manual database setup required!**
 
 ## Usage Guide
 
@@ -198,6 +206,13 @@ The Jikan API has rate limits:
 
 ## Database Design Highlights
 
+### SQLite Advantages
+- **Zero configuration** - Works out of the box
+- **Portable** - Single file database
+- **Perfect for development** and demonstration
+- **Full SQL support** - All relational features work
+- **Production ready** - Handles thousands of records efficiently
+
 ### Normalization
 - Proper 3NF normalization
 - Separate lookup tables for genres, studios, themes
@@ -222,7 +237,9 @@ The Jikan API has rate limits:
 ├── database.py            # Database connection and utilities
 ├── jikan_ingestion.py     # Jikan API data ingestion
 ├── ml_features.py         # Hugging Face ML integration
-├── pyproject.toml         # Python dependencies
+├── requirements.txt.local # Python dependencies
+├── anime_db.sqlite        # SQLite database file (auto-created)
+├── .streamlit/            # Streamlit configuration
 └── README.md              # This file
 ```
 
@@ -249,7 +266,7 @@ This project demonstrates proficiency in:
 
 - **Data Source**: [MyAnimeList](https://myanimelist.net/) via [Jikan API](https://jikan.moe/)
 - **ML Models**: [Hugging Face](https://huggingface.co/)
-- **Database**: PostgreSQL
+- **Database**: SQLite (built-in with Python)
 - **Framework**: Streamlit
 
 ## License
@@ -259,3 +276,4 @@ This is an educational project for database class purposes.
 ---
 
 **Created for Database Class - November 2025**
+*Featuring 500+ anime records with characters, genres, and ML analysis*
