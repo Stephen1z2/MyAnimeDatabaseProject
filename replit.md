@@ -2,11 +2,36 @@
 
 ## Overview
 
-This is a database-focused educational project that demonstrates comprehensive database design and data engineering principles. The application ingests real anime data from MyAnimeList via the Jikan API, stores it in a PostgreSQL relational database with 8+ tables, and enhances the data using Hugging Face machine learning models for text classification and sentiment analysis. The project features an interactive Streamlit dashboard for data exploration, search functionality, and analytics visualization.
+This is a database-focused educational project that demonstrates comprehensive database design and data engineering principles. The application ingests real anime data from MyAnimeList via the Jikan API, stores it in a PostgreSQL relational database with 8 tables, and enhances the data using Hugging Face machine learning models for text classification and sentiment analysis. The project features an interactive Streamlit dashboard for data exploration, search functionality, and analytics visualization.
+
+**Project Status**: ✅ Complete and fully functional. All core features implemented and tested.
 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+
+## Recent Changes (November 11, 2025)
+
+### Database Schema Improvements
+- Fixed character-anime relationship to proper many-to-many with role preservation
+- Implemented AnimeCharacter association object to store role information
+- Updated ingestion logic to properly handle character roles
+
+### Robustness Enhancements
+- Modified data ingestion to commit per-record instead of batch commits
+- Prevents data loss when individual records fail during ingestion
+- Improved error handling and recovery
+
+### ML Integration
+- Added optional Hugging Face token configuration
+- Documented token setup in README
+- Works with free tier but token improves rate limits
+
+### Bug Fixes
+- Fixed missing junction table imports (anime_genres, anime_studios)
+- Corrected Plotly API calls (update_xaxis → update_xaxes)
+- All pages now load without errors
+- Proper empty state handling throughout application
 
 ## System Architecture
 
