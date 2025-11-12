@@ -516,47 +516,81 @@ elif sidebar_option == "Data Explorer":
         with explorer_tabs[3]:
             st.subheader("Characters Data")
             
-            # Character pagination controls
-            char_per_page = st.selectbox("Characters per page:", [50, 100, 200, 500], index=0, key="char_per_page")
+            # Character view options
+            view_mode = st.radio(
+                "View Mode:", 
+                ["Character-Anime Relationships", "Unique Characters Only"], 
+                help="Character-Anime shows each character once per anime they appear in. Unique Characters shows each character only once."
+            )
             
-            # Get total character count
-            total_chars = session.query(func.count(Character.id)).scalar()
-            total_char_pages = (total_chars + char_per_page - 1) // char_per_page
-            
-            if total_chars > 0:
-                char_page = st.selectbox(f"Page (1 to {total_char_pages}):", 
-                                       range(1, total_char_pages + 1), key="char_page")
-                offset = (char_page - 1) * char_per_page
-                
-                # Character sorting options
-                char_sort_options = {
-                    "Character Name (A-Z)": Character.name.asc(),
-                    "Character Name (Z-A)": Character.name.desc(),
-                    "Anime Title (A-Z)": Anime.title.asc(),
-                    "Anime Title (Z-A)": Anime.title.desc(),
-                    "Role": AnimeCharacter.role.asc()
-                }
-                
-                char_sort_by = st.selectbox("Sort by:", list(char_sort_options.keys()), key="char_sort")
-                
-                char_data = session.query(
-                    Character.name, AnimeCharacter.role, Anime.title
+            if view_mode == "Unique Characters Only":
+                # Show unique characters grouped
+                unique_chars = session.query(
+                    Character.name,
+                    Character.mal_id,
+                    func.count(func.distinct(Anime.id)).label('anime_count'),
+                    func.group_concat(func.distinct(Anime.title), ' | ').label('anime_list')
                 ).join(AnimeCharacter, Character.id == AnimeCharacter.character_id
                 ).join(Anime, AnimeCharacter.anime_id == Anime.id
-                ).order_by(char_sort_options[char_sort_by]
-                ).offset(offset).limit(char_per_page).all()
+                ).group_by(Character.id, Character.name, Character.mal_id
+                ).order_by(Character.name.asc()).limit(200).all()
                 
-                if char_data:
-                    df = pd.DataFrame(char_data, columns=['Character Name', 'Role', 'Anime'])
-                    
-                    # Display pagination info
-                    st.caption(f"Showing {len(char_data)} characters (Page {char_page} of {total_char_pages}) - Total: {total_chars}")
-                    
+                if unique_chars:
+                    df = pd.DataFrame(unique_chars, columns=['Character Name', 'MAL Character ID', 'Appears in # Anime', 'Anime List'])
+                    st.caption(f"Showing {len(unique_chars)} unique characters (limited to 200 for performance)")
+                    st.info("💡 **Tip**: Characters appearing in multiple anime are often the same character across different seasons or movies.")
                     st.dataframe(df, use_container_width=True, hide_index=True)
                 else:
-                    st.info("No character data found on this page.")
+                    st.info("No character data available.")
+                    
             else:
-                st.info("No character data available. Use the character ingestion feature to add character data.")
+                # Original character-anime relationship view
+                char_per_page = st.selectbox("Characters per page:", [50, 100, 200, 500], index=0, key="char_per_page")
+                
+                # Get total character-anime relationships count
+                total_chars = session.query(func.count(AnimeCharacter.anime_id)).scalar()
+                total_char_pages = (total_chars + char_per_page - 1) // char_per_page
+                
+                if total_chars > 0:
+                    char_page = st.selectbox(f"Page (1 to {total_char_pages}):", 
+                                           range(1, total_char_pages + 1), key="char_page")
+                    offset = (char_page - 1) * char_per_page
+                    
+                    # Character sorting options
+                    char_sort_options = {
+                        "Character Name (A-Z)": Character.name.asc(),
+                        "Character Name (Z-A)": Character.name.desc(),
+                        "Anime Title (A-Z)": Anime.title.asc(),
+                        "Anime Title (Z-A)": Anime.title.desc(),
+                        "Role": AnimeCharacter.role.asc(),
+                        "MAL Character ID": Character.mal_id.asc()
+                    }
+                    
+                    char_sort_by = st.selectbox("Sort by:", list(char_sort_options.keys()), key="char_sort")
+                    
+                    char_data = session.query(
+                        Character.name, 
+                        AnimeCharacter.role, 
+                        Anime.title,
+                        Character.mal_id,
+                        Character.id
+                    ).join(AnimeCharacter, Character.id == AnimeCharacter.character_id
+                    ).join(Anime, AnimeCharacter.anime_id == Anime.id
+                    ).order_by(char_sort_options[char_sort_by]
+                    ).offset(offset).limit(char_per_page).all()
+                    
+                    if char_data:
+                        df = pd.DataFrame(char_data, columns=['Character Name', 'Role', 'Anime', 'MAL Character ID', 'DB ID'])
+                        
+                        # Display pagination info and helpful note
+                        st.caption(f"Showing {len(char_data)} character-anime relationships (Page {char_page} of {total_char_pages}) - Total: {total_chars}")
+                        st.info("💡 **Note**: Same character appearing multiple times means they appear in multiple anime (often different seasons). Characters with the same name but different MAL IDs are different characters.")
+                        
+                        st.dataframe(df, use_container_width=True, hide_index=True)
+                    else:
+                        st.info("No character data found on this page.")
+                else:
+                    st.info("No character data available. Use the character ingestion feature to add character data.")
         
         with explorer_tabs[4]:
             st.subheader("ML Features")
