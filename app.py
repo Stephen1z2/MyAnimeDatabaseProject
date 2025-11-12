@@ -110,6 +110,159 @@ if sidebar_option == "Database Overview":
             st.subheader("Quick Actions")
             if st.button("Refresh Statistics"):
                 st.rerun()
+        
+        # Comprehensive Database Statistics
+        if st.session_state.db_initialized:
+            st.markdown("---")
+            st.subheader("📈 Comprehensive Database Statistics")
+            
+            session = get_session()
+            
+            try:
+                # Core data counts
+                anime_count = session.query(func.count(Anime.id)).scalar()
+                character_count = session.query(func.count(Character.id)).scalar()
+                genre_count = session.query(func.count(Genre.id)).scalar()
+                studio_count = session.query(func.count(Studio.id)).scalar()
+                
+                # Create expandable sections
+                with st.expander("📊 Core Data Summary", expanded=True):
+                    stat_col1, stat_col2, stat_col3, stat_col4 = st.columns(4)
+                    
+                    with stat_col1:
+                        st.metric("🎬 Anime", f"{anime_count:,}")
+                    with stat_col2:
+                        st.metric("👥 Characters", f"{character_count:,}")
+                    with stat_col3:
+                        st.metric("🎭 Genres", f"{genre_count:,}")
+                    with stat_col4:
+                        st.metric("🏢 Studios", f"{studio_count:,}")
+                
+                with st.expander("🔗 Relationship Statistics"):
+                    # Relationship counts
+                    anime_char_relations = session.query(func.count(AnimeCharacter.anime_id)).scalar()
+                    anime_genre_relations = session.query(func.count(anime_genres.c.anime_id)).scalar()
+                    anime_studio_relations = session.query(func.count(anime_studios.c.anime_id)).scalar()
+                    
+                    rel_col1, rel_col2, rel_col3 = st.columns(3)
+                    
+                    with rel_col1:
+                        st.metric("Anime ↔ Characters", f"{anime_char_relations:,}")
+                        st.caption("Character appearances in anime")
+                    with rel_col2:
+                        st.metric("Anime ↔ Genres", f"{anime_genre_relations:,}")
+                        st.caption("Genre classifications")
+                    with rel_col3:
+                        st.metric("Anime ↔ Studios", f"{anime_studio_relations:,}")
+                        st.caption("Studio productions")
+                
+                with st.expander("✅ Data Quality Metrics"):
+                    # Data quality metrics
+                    anime_with_scores = session.query(func.count(Anime.id)).filter(Anime.score.isnot(None)).scalar()
+                    anime_with_synopsis = session.query(func.count(Anime.id)).filter(
+                        Anime.synopsis.isnot(None), Anime.synopsis != ""
+                    ).scalar()
+                    anime_with_images = session.query(func.count(Anime.id)).filter(
+                        Anime.image_url.isnot(None), Anime.image_url != ""
+                    ).scalar()
+                    
+                    quality_col1, quality_col2, quality_col3 = st.columns(3)
+                    
+                    with quality_col1:
+                        score_pct = (anime_with_scores/anime_count*100) if anime_count > 0 else 0
+                        st.metric("With Scores", f"{anime_with_scores:,}", f"{score_pct:.1f}%")
+                        st.progress(score_pct/100)
+                    
+                    with quality_col2:
+                        synopsis_pct = (anime_with_synopsis/anime_count*100) if anime_count > 0 else 0
+                        st.metric("With Synopsis", f"{anime_with_synopsis:,}", f"{synopsis_pct:.1f}%")
+                        st.progress(synopsis_pct/100)
+                    
+                    with quality_col3:
+                        images_pct = (anime_with_images/anime_count*100) if anime_count > 0 else 0
+                        st.metric("With Images", f"{anime_with_images:,}", f"{images_pct:.1f}%")
+                        st.progress(images_pct/100)
+                
+                with st.expander("📊 Content Analysis"):
+                    content_col1, content_col2 = st.columns(2)
+                    
+                    with content_col1:
+                        # Score statistics
+                        avg_score = session.query(func.avg(Anime.score)).filter(Anime.score.isnot(None)).scalar()
+                        min_score = session.query(func.min(Anime.score)).filter(Anime.score.isnot(None)).scalar()
+                        max_score = session.query(func.max(Anime.score)).filter(Anime.score.isnot(None)).scalar()
+                        
+                        st.markdown("**🎯 Score Statistics**")
+                        if avg_score:
+                            st.write(f"Average Score: **{avg_score:.2f}**")
+                            st.write(f"Score Range: **{min_score:.2f} - {max_score:.2f}**")
+                        
+                        # Episode statistics  
+                        total_episodes = session.query(func.sum(Anime.episodes)).filter(Anime.episodes.isnot(None)).scalar()
+                        avg_episodes = session.query(func.avg(Anime.episodes)).filter(Anime.episodes.isnot(None)).scalar()
+                        
+                        st.markdown("**📺 Episode Statistics**")
+                        if total_episodes:
+                            st.write(f"Total Episodes: **{total_episodes:,}**")
+                            st.write(f"Average per Anime: **{avg_episodes:.1f}**")
+                    
+                    with content_col2:
+                        # Time coverage
+                        min_year = session.query(func.min(Anime.year)).filter(Anime.year.isnot(None)).scalar()
+                        max_year = session.query(func.max(Anime.year)).filter(Anime.year.isnot(None)).scalar()
+                        
+                        st.markdown("**📅 Time Coverage**")
+                        if min_year and max_year:
+                            st.write(f"Year Range: **{min_year} - {max_year}**")
+                            st.write(f"Spans: **{max_year - min_year} years**")
+                        
+                        # Top genres
+                        st.markdown("**🎭 Top 5 Genres**")
+                        top_genres = session.query(
+                            Genre.name, 
+                            func.count(anime_genres.c.anime_id).label('count')
+                        ).join(anime_genres).group_by(Genre.name).order_by(
+                            func.count(anime_genres.c.anime_id).desc()
+                        ).limit(5).all()
+                        
+                        for i, (genre, count) in enumerate(top_genres, 1):
+                            st.write(f"{i}. **{genre}**: {count:,}")
+                
+                with st.expander("💾 Database Scale"):
+                    # Database size calculations
+                    total_records = (anime_count + character_count + genre_count + studio_count + 
+                                   anime_char_relations + anime_genre_relations + anime_studio_relations)
+                    
+                    scale_col1, scale_col2, scale_col3 = st.columns(3)
+                    
+                    with scale_col1:
+                        st.metric("Total Records", f"{total_records:,}")
+                        st.caption("Across all tables")
+                    
+                    with scale_col2:
+                        ml_ready = "✅ Ready" if anime_count >= 100 else "❌ Need More"
+                        st.metric("ML/AI Ready", ml_ready)
+                        st.caption(f"For neural networks")
+                    
+                    with scale_col3:
+                        size_category = "Large" if total_records > 10000 else "Medium" if total_records > 1000 else "Small"
+                        st.metric("Dataset Size", size_category)
+                        st.caption("Classification")
+                    
+                    # Summary assessment
+                    st.markdown("**📋 Summary Assessment:**")
+                    if anime_count >= 1000:
+                        st.success("🎉 **Excellent**: Large-scale database perfect for advanced ML, recommendations, and analytics!")
+                    elif anime_count >= 500:
+                        st.info("👍 **Good**: Medium-scale database suitable for most ML experiments and recommendations")
+                    else:
+                        st.warning("⚠️ **Growing**: Database is building up - great start for basic analytics")
+                        
+            except Exception as e:
+                st.error(f"Error calculating statistics: {e}")
+            
+            finally:
+                session.close()
 
 elif sidebar_option == "Database Schema":
     st.header("🗂️ Database Schema")
