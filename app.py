@@ -45,7 +45,7 @@ if 'data_ingested' not in st.session_state:
 
 sidebar_option = st.sidebar.selectbox(
     "Navigation",
-    ["Database Overview", "Database Schema", "Data Ingestion", "Search Anime", "Search Characters", "Data Explorer", "ML Features", "Analytics"]
+    ["Database Overview", "Database Schema", "Data Ingestion", "Search Anime", "Search Characters", "Data Explorer", "Recommendations", "Data Quality", "ML Features", "Analytics"]
 )
 
 if sidebar_option == "Database Overview":
@@ -750,6 +750,423 @@ elif sidebar_option == "Data Explorer":
                     st.plotly_chart(fig, width="stretch")
             else:
                 st.info("No ML features generated yet. Use the ML Features page to generate them.")
+        
+        session.close()
+
+elif sidebar_option == "Recommendations":
+    st.header("🎯 Anime Recommendations")
+    
+    if not st.session_state.db_initialized:
+        st.warning("Please initialize and populate the database first.")
+    else:
+        session = get_session()
+        
+        st.markdown("""
+        **Find anime similar to ones you love!** This recommendation engine analyzes:
+        - **Shared Genres**: Anime with overlapping genres
+        - **Same Studio**: Other works from the same studio
+        - **Similar Scores**: Anime with comparable ratings
+        """)
+        
+        # Get all anime for selection
+        all_anime = session.query(Anime.title, Anime.mal_id, Anime.score, Anime.image_url).order_by(Anime.title).all()
+        anime_options = {f"{title} (Score: {score if score else 'N/A'})": mal_id 
+                        for title, mal_id, score, _ in all_anime}
+        
+        # Anime selection
+        st.subheader("🎬 Select an Anime")
+        selected_anime_display = st.selectbox(
+            "Choose an anime to get recommendations:",
+            options=list(anime_options.keys()),
+            key="rec_anime_select"
+        )
+        
+        if selected_anime_display:
+            selected_mal_id = anime_options[selected_anime_display]
+            
+            # Get the selected anime details
+            selected_anime = session.query(Anime).filter(Anime.mal_id == selected_mal_id).first()
+            
+            if selected_anime:
+                # Display selected anime info
+                col1, col2 = st.columns([1, 3])
+                
+                with col1:
+                    if selected_anime.image_url:
+                        st.image(selected_anime.image_url, width=150)
+                    else:
+                        st.write("🖼️ No image")
+                
+                with col2:
+                    st.markdown(f"### {selected_anime.title}")
+                    st.write(f"**Score:** {selected_anime.score if selected_anime.score else 'N/A'}")
+                    st.write(f"**Episodes:** {selected_anime.episodes if selected_anime.episodes else 'N/A'}")
+                    st.write(f"**Status:** {selected_anime.status if selected_anime.status else 'N/A'}")
+                    
+                    # Get genres
+                    genres = [g.name for g in selected_anime.genres]
+                    st.write(f"**Genres:** {', '.join(genres) if genres else 'N/A'}")
+                    
+                    # Get studio
+                    studios = [s.name for s in selected_anime.studios]
+                    st.write(f"**Studios:** {', '.join(studios) if studios else 'N/A'}")
+                
+                st.markdown("---")
+                
+                # Recommendation Settings
+                st.subheader("⚙️ Recommendation Settings")
+                rec_col1, rec_col2, rec_col3 = st.columns(3)
+                
+                with rec_col1:
+                    genre_weight = st.slider("Genre Similarity Weight", 0.0, 1.0, 0.6, 0.1)
+                
+                with rec_col2:
+                    studio_weight = st.slider("Studio Match Weight", 0.0, 1.0, 0.3, 0.1)
+                
+                with rec_col3:
+                    score_weight = st.slider("Score Similarity Weight", 0.0, 1.0, 0.1, 0.1)
+                
+                # Score range settings
+                score_range = st.slider("Score Range (±)", 0.5, 3.0, 1.0, 0.5)
+                max_results = st.slider("Maximum Results", 5, 20, 10)
+                
+                if st.button("🎯 Get Recommendations", type="primary"):
+                    with st.spinner("Analyzing anime similarities..."):
+                        
+                        # Get all other anime (excluding the selected one)
+                        other_anime = session.query(Anime).filter(Anime.mal_id != selected_mal_id).all()
+                        
+                        recommendations = []
+                        selected_genres = set(g.name for g in selected_anime.genres)
+                        selected_studios = set(s.name for s in selected_anime.studios)
+                        selected_score = selected_anime.score or 0
+                        
+                        for anime in other_anime:
+                            similarity_score = 0
+                            reasons = []
+                            
+                            # Genre similarity
+                            anime_genres = set(g.name for g in anime.genres)
+                            if selected_genres and anime_genres:
+                                genre_overlap = len(selected_genres.intersection(anime_genres))
+                                genre_similarity = genre_overlap / len(selected_genres.union(anime_genres))
+                                similarity_score += genre_similarity * genre_weight
+                                
+                                if genre_overlap > 0:
+                                    shared_genres = selected_genres.intersection(anime_genres)
+                                    reasons.append(f"Shared genres: {', '.join(shared_genres)}")
+                            
+                            # Studio similarity
+                            anime_studios = set(s.name for s in anime.studios)
+                            if selected_studios and anime_studios:
+                                studio_overlap = len(selected_studios.intersection(anime_studios))
+                                if studio_overlap > 0:
+                                    similarity_score += studio_weight
+                                    shared_studios = selected_studios.intersection(anime_studios)
+                                    reasons.append(f"Same studio: {', '.join(shared_studios)}")
+                            
+                            # Score similarity
+                            if selected_score > 0 and anime.score:
+                                score_diff = abs(selected_score - anime.score)
+                                if score_diff <= score_range:
+                                    score_similarity = 1 - (score_diff / score_range)
+                                    similarity_score += score_similarity * score_weight
+                                    reasons.append(f"Similar score: {anime.score:.1f} vs {selected_score:.1f}")
+                            
+                            # Only include if there's some similarity
+                            if similarity_score > 0:
+                                recommendations.append({
+                                    'anime': anime,
+                                    'score': similarity_score,
+                                    'reasons': reasons
+                                })
+                        
+                        # Sort by similarity score and get top results
+                        recommendations.sort(key=lambda x: x['score'], reverse=True)
+                        top_recommendations = recommendations[:max_results]
+                        
+                        if top_recommendations:
+                            st.success(f"🎉 Found {len(top_recommendations)} recommendations!")
+                            
+                            # Display recommendations
+                            for i, rec in enumerate(top_recommendations, 1):
+                                anime = rec['anime']
+                                score = rec['score']
+                                reasons = rec['reasons']
+                                
+                                with st.container():
+                                    rec_col1, rec_col2 = st.columns([1, 4])
+                                    
+                                    with rec_col1:
+                                        if anime.image_url:
+                                            st.image(anime.image_url, width=100)
+                                        else:
+                                            st.write("🖼️")
+                                    
+                                    with rec_col2:
+                                        st.markdown(f"#### {i}. {anime.title}")
+                                        st.write(f"**Similarity Score:** {score:.2f}")
+                                        st.write(f"**Score:** {anime.score if anime.score else 'N/A'}")
+                                        st.write(f"**Episodes:** {anime.episodes if anime.episodes else 'N/A'}")
+                                        
+                                        # Show genres
+                                        rec_genres = [g.name for g in anime.genres]
+                                        if rec_genres:
+                                            st.write(f"**Genres:** {', '.join(rec_genres)}")
+                                        
+                                        # Show reasons
+                                        if reasons:
+                                            st.write(f"**Why recommended:** {' • '.join(reasons)}")
+                                        
+                                        # Synopsis preview
+                                        if anime.synopsis:
+                                            synopsis_preview = anime.synopsis[:200] + "..." if len(anime.synopsis) > 200 else anime.synopsis
+                                            st.write(f"**Synopsis:** {synopsis_preview}")
+                                
+                                st.markdown("---")
+                        else:
+                            st.warning("😔 No similar anime found with current settings. Try adjusting the weights or score range.")
+        
+        session.close()
+
+elif sidebar_option == "Data Quality":
+    st.header("🔍 Data Quality & Integrity")
+    
+    if not st.session_state.db_initialized:
+        st.warning("Please initialize and populate the database first.")
+    else:
+        session = get_session()
+        
+        # Data Quality Overview
+        st.subheader("📊 Data Quality Overview")
+        
+        # Get basic statistics
+        anime_count = session.query(func.count(Anime.id)).scalar()
+        char_count = session.query(func.count(Character.id)).scalar()
+        genre_count = session.query(func.count(Genre.id)).scalar()
+        studio_count = session.query(func.count(Studio.id)).scalar()
+        
+        # Quality metrics
+        anime_with_synopsis = session.query(func.count(Anime.id)).filter(Anime.synopsis.isnot(None), Anime.synopsis != "").scalar()
+        anime_with_scores = session.query(func.count(Anime.id)).filter(Anime.score.isnot(None)).scalar()
+        anime_with_images = session.query(func.count(Anime.id)).filter(Anime.image_url.isnot(None), Anime.image_url != "").scalar()
+        
+        # Display quality metrics
+        qual_col1, qual_col2, qual_col3, qual_col4 = st.columns(4)
+        qual_col1.metric("Total Anime", f"{anime_count:,}")
+        qual_col2.metric("With Synopsis", f"{anime_with_synopsis:,}", f"{(anime_with_synopsis/anime_count*100):.1f}%" if anime_count > 0 else "0%")
+        qual_col3.metric("With Scores", f"{anime_with_scores:,}", f"{(anime_with_scores/anime_count*100):.1f}%" if anime_count > 0 else "0%")
+        qual_col4.metric("With Images", f"{anime_with_images:,}", f"{(anime_with_images/anime_count*100):.1f}%" if anime_count > 0 else "0%")
+        
+        st.markdown("---")
+        
+        # Duplicate Detection Tabs
+        quality_tabs = st.tabs(["🔍 Duplicate Detection", "📋 Missing Data", "🔗 Orphaned Records", "📈 Data Consistency"])
+        
+        with quality_tabs[0]:
+            st.subheader("Duplicate Detection")
+            
+            detect_col1, detect_col2 = st.columns(2)
+            
+            with detect_col1:
+                st.markdown("#### 🎬 Anime Duplicates")
+                
+                # Find potential anime duplicates by title similarity
+                anime_duplicates = session.query(
+                    Anime.title,
+                    func.count(Anime.id).label('count'),
+                    func.group_concat(Anime.mal_id).label('mal_ids')
+                ).group_by(Anime.title).having(func.count(Anime.id) > 1).order_by(func.count(Anime.id).desc()).all()
+                
+                if anime_duplicates:
+                    st.warning(f"Found {len(anime_duplicates)} potential anime duplicates:")
+                    for title, count, mal_ids in anime_duplicates[:10]:  # Show top 10
+                        st.write(f"**{title}** - {count} entries (MAL IDs: {mal_ids})")
+                else:
+                    st.success("✅ No exact title duplicates found")
+                
+                # Check for similar titles (basic similarity)
+                if st.button("Check Similar Titles", key="anime_similar"):
+                    with st.spinner("Analyzing title similarities..."):
+                        all_anime = session.query(Anime.title, Anime.mal_id).all()
+                        similar_pairs = []
+                        
+                        for i, (title1, mal_id1) in enumerate(all_anime):
+                            for title2, mal_id2 in all_anime[i+1:i+20]:  # Limit for performance
+                                # Simple similarity check
+                                if title1.lower() in title2.lower() or title2.lower() in title1.lower():
+                                    if title1 != title2:
+                                        similar_pairs.append((title1, title2, mal_id1, mal_id2))
+                        
+                        if similar_pairs:
+                            st.warning(f"Found {len(similar_pairs)} potentially similar titles:")
+                            for title1, title2, mal_id1, mal_id2 in similar_pairs[:5]:
+                                st.write(f"• {title1} (MAL: {mal_id1})")
+                                st.write(f"• {title2} (MAL: {mal_id2})")
+                                st.write("---")
+                        else:
+                            st.success("✅ No similar titles detected")
+            
+            with detect_col2:
+                st.markdown("#### 👥 Character Duplicates")
+                
+                # Find character duplicates
+                char_duplicates = session.query(
+                    Character.name,
+                    func.count(Character.id).label('count'),
+                    func.group_concat(Character.mal_id).label('mal_ids')
+                ).group_by(Character.name).having(func.count(Character.id) > 1).order_by(func.count(Character.id).desc()).all()
+                
+                if char_duplicates:
+                    st.info(f"Found {len(char_duplicates)} characters with same name:")
+                    for name, count, mal_ids in char_duplicates[:10]:
+                        st.write(f"**{name}** - {count} entries (MAL IDs: {mal_ids})")
+                    st.caption("💡 Note: Same character name in different anime is normal (e.g., different 'Haku' characters)")
+                else:
+                    st.success("✅ No character name duplicates")
+                
+                # Check for duplicate MAL IDs (actual duplicates)
+                char_mal_duplicates = session.query(
+                    Character.mal_id,
+                    func.count(Character.id).label('count'),
+                    func.group_concat(Character.name).label('names')
+                ).group_by(Character.mal_id).having(func.count(Character.id) > 1).all()
+                
+                if char_mal_duplicates:
+                    st.error(f"🚨 Found {len(char_mal_duplicates)} actual character duplicates (same MAL ID):")
+                    for mal_id, count, names in char_mal_duplicates:
+                        st.write(f"**MAL ID {mal_id}** - {count} entries: {names}")
+                else:
+                    st.success("✅ No duplicate MAL IDs found")
+        
+        with quality_tabs[1]:
+            st.subheader("Missing Data Analysis")
+            
+            # Anime missing data
+            missing_synopsis = session.query(func.count(Anime.id)).filter(
+                (Anime.synopsis.is_(None)) | (Anime.synopsis == "")
+            ).scalar()
+            missing_scores = session.query(func.count(Anime.id)).filter(Anime.score.is_(None)).scalar()
+            missing_images = session.query(func.count(Anime.id)).filter(
+                (Anime.image_url.is_(None)) | (Anime.image_url == "")
+            ).scalar()
+            missing_episodes = session.query(func.count(Anime.id)).filter(Anime.episodes.is_(None)).scalar()
+            
+            miss_col1, miss_col2 = st.columns(2)
+            
+            with miss_col1:
+                st.markdown("#### 🎬 Anime Missing Data")
+                st.metric("Missing Synopsis", f"{missing_synopsis:,}", f"{(missing_synopsis/anime_count*100):.1f}%" if anime_count > 0 else "0%")
+                st.metric("Missing Scores", f"{missing_scores:,}", f"{(missing_scores/anime_count*100):.1f}%" if anime_count > 0 else "0%")
+                st.metric("Missing Images", f"{missing_images:,}", f"{(missing_images/anime_count*100):.1f}%" if anime_count > 0 else "0%")
+                st.metric("Missing Episodes", f"{missing_episodes:,}", f"{(missing_episodes/anime_count*100):.1f}%" if anime_count > 0 else "0%")
+            
+            with miss_col2:
+                st.markdown("#### 👥 Character Missing Data")
+                char_missing_images = session.query(func.count(Character.id)).filter(
+                    (Character.image_url.is_(None)) | (Character.image_url == "")
+                ).scalar()
+                
+                role_missing = session.query(func.count(AnimeCharacter.anime_id)).filter(
+                    (AnimeCharacter.role.is_(None)) | (AnimeCharacter.role == "")
+                ).scalar()
+                
+                st.metric("Characters Missing Images", f"{char_missing_images:,}", f"{(char_missing_images/char_count*100):.1f}%" if char_count > 0 else "0%")
+                st.metric("Character Roles Missing", f"{role_missing:,}")
+        
+        with quality_tabs[2]:
+            st.subheader("Orphaned Records Detection")
+            
+            # Check for orphaned records
+            orphan_col1, orphan_col2 = st.columns(2)
+            
+            with orphan_col1:
+                st.markdown("#### 🔗 Relationship Integrity")
+                
+                # Characters without anime relationships
+                orphaned_chars = session.query(func.count(Character.id)).outerjoin(
+                    AnimeCharacter, Character.id == AnimeCharacter.character_id
+                ).filter(AnimeCharacter.character_id.is_(None)).scalar()
+                
+                # Anime without genres
+                anime_no_genres = session.query(func.count(Anime.id)).outerjoin(
+                    anime_genres, Anime.id == anime_genres.c.anime_id
+                ).filter(anime_genres.c.anime_id.is_(None)).scalar()
+                
+                st.metric("Orphaned Characters", f"{orphaned_chars:,}")
+                st.metric("Anime Without Genres", f"{anime_no_genres:,}")
+                
+                if orphaned_chars > 0:
+                    st.warning(f"⚠️ {orphaned_chars} characters are not linked to any anime")
+                
+                if anime_no_genres > 0:
+                    st.warning(f"⚠️ {anime_no_genres} anime have no genre classifications")
+            
+            with orphan_col2:
+                st.markdown("#### 📊 Reference Integrity")
+                
+                # Check for broken references
+                total_char_relations = session.query(func.count(AnimeCharacter.anime_id)).scalar()
+                total_genre_relations = session.query(func.count(anime_genres.c.anime_id)).scalar()
+                
+                st.metric("Character-Anime Links", f"{total_char_relations:,}")
+                st.metric("Anime-Genre Links", f"{total_genre_relations:,}")
+                
+                # Data completeness score
+                completeness_score = (
+                    (anime_with_synopsis / anime_count) * 0.3 +
+                    (anime_with_scores / anime_count) * 0.3 +
+                    ((char_count - orphaned_chars) / char_count if char_count > 0 else 1) * 0.4
+                ) * 100 if anime_count > 0 else 0
+                
+                st.metric("Data Completeness Score", f"{completeness_score:.1f}%")
+        
+        with quality_tabs[3]:
+            st.subheader("Data Consistency Checks")
+            
+            consist_col1, consist_col2 = st.columns(2)
+            
+            with consist_col1:
+                st.markdown("#### 📊 Score Validation")
+                
+                # Invalid scores
+                invalid_scores = session.query(func.count(Anime.id)).filter(
+                    (Anime.score < 0) | (Anime.score > 10)
+                ).scalar()
+                
+                # Suspicious scores (very low or very high)
+                very_low_scores = session.query(func.count(Anime.id)).filter(Anime.score < 2.0).scalar()
+                very_high_scores = session.query(func.count(Anime.id)).filter(Anime.score > 9.5).scalar()
+                
+                st.metric("Invalid Scores (0-10 range)", invalid_scores)
+                st.metric("Very Low Scores (<2.0)", very_low_scores)
+                st.metric("Very High Scores (>9.5)", very_high_scores)
+                
+                # Score distribution
+                avg_score = session.query(func.avg(Anime.score)).filter(Anime.score.isnot(None)).scalar()
+                if avg_score:
+                    st.metric("Average Score", f"{avg_score:.2f}")
+            
+            with consist_col2:
+                st.markdown("#### 📅 Date Validation")
+                
+                # Future dates
+                from datetime import date
+                today = date.today()
+                future_dates = session.query(func.count(Anime.id)).filter(Anime.aired_from > today).scalar()
+                
+                # Very old dates (suspicious)
+                very_old = session.query(func.count(Anime.id)).filter(Anime.aired_from < date(1950, 1, 1)).scalar()
+                
+                st.metric("Future Dates", future_dates)
+                st.metric("Very Old Dates (<1950)", very_old)
+                
+                # Episode count validation
+                high_episodes = session.query(func.count(Anime.id)).filter(Anime.episodes > 2000).scalar()
+                zero_episodes = session.query(func.count(Anime.id)).filter(Anime.episodes == 0).scalar()
+                
+                st.metric("High Episode Count (>2000)", high_episodes)
+                st.metric("Zero Episodes", zero_episodes)
         
         session.close()
 
