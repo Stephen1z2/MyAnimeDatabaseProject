@@ -45,7 +45,7 @@ if 'data_ingested' not in st.session_state:
 
 sidebar_option = st.sidebar.selectbox(
     "Navigation",
-    ["Database Overview", "Database Schema", "Data Ingestion", "Search Anime", "Search Characters", "Data Explorer", "Recommendations", "Data Quality", "ML Features", "Analytics"]
+    ["Database Overview", "Database Schema", "Data Ingestion", "Search Anime", "Search Characters", "Data Explorer", "Recommendations", "Neural Network", "Data Quality", "ML Features", "Analytics"]
 )
 
 if sidebar_option == "Database Overview":
@@ -928,6 +928,297 @@ elif sidebar_option == "Recommendations":
                             st.warning("😔 No similar anime found with current settings. Try adjusting the weights or score range.")
         
         session.close()
+
+elif sidebar_option == "Neural Network":
+    st.header("🧠 Neural Network Recommendations")
+    
+    if not st.session_state.db_initialized:
+        st.warning("Please initialize and populate the database first.")
+    else:
+        st.markdown("""
+        **Advanced AI-powered recommendations using deep learning!** This neural network:
+        - **Learns complex patterns** in anime features and user preferences
+        - **Content-based filtering** using multi-layer neural networks
+        - **Feature embeddings** for similarity calculation
+        - **Deep learning architecture** with multiple hidden layers
+        """)
+        
+        # Check if we can import the neural network module
+        try:
+            import sys
+            import os
+            
+            # Add current directory to path if not already there
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            if current_dir not in sys.path:
+                sys.path.append(current_dir)
+                
+            # Try to import required libraries
+            import tensorflow as tf
+            import numpy as np
+            from sklearn.preprocessing import StandardScaler, LabelEncoder
+            
+            st.success("✅ TensorFlow and required libraries are available!")
+            
+            # Neural Network Training Section
+            st.subheader("🏗️ Neural Network Training")
+            
+            training_col1, training_col2 = st.columns(2)
+            
+            with training_col1:
+                st.markdown("#### Training Parameters")
+                epochs = st.slider("Training Epochs", 10, 100, 30, 5)
+                st.write("**Epochs**: Number of times the model sees the entire dataset")
+                
+                learning_rate = st.selectbox(
+                    "Learning Rate",
+                    [0.001, 0.0001, 0.01],
+                    index=0
+                )
+                st.write("**Learning Rate**: How quickly the model learns")
+                
+            with training_col2:
+                st.markdown("#### Model Architecture")
+                st.write("**Layers**: 128 → 64 → 32 → 16 → 8 → 1")
+                st.write("**Activation**: ReLU (hidden), Sigmoid (output)")
+                st.write("**Loss**: Binary Crossentropy")
+                st.write("**Optimizer**: Adam")
+                st.write("**Dropout**: 30%, 20%, 10% for regularization")
+            
+            if st.button("🚀 Train Neural Network", type="primary"):
+                with st.spinner("Training neural network... This may take a few minutes."):
+                    try:
+                        # Dynamic import of our neural network module
+                        from recommendation_nn import AnimeRecommendationNN
+                        
+                        # Initialize and train
+                        nn = AnimeRecommendationNN()
+                        
+                        # Train the model
+                        results, error = nn.train_content_model(epochs=epochs)
+                        
+                        if error:
+                            st.error(f"❌ Training failed: {error}")
+                        else:
+                            st.success("🎉 Neural network trained successfully!")
+                            
+                            # Display results
+                            col1, col2, col3 = st.columns(3)
+                            
+                            with col1:
+                                st.metric("Anime Used", results['anime_count'])
+                                st.metric("Training Pairs", results['training_pairs'])
+                            
+                            with col2:
+                                st.metric("Final Accuracy", f"{results['final_accuracy']:.3f}")
+                                st.metric("Validation Loss", f"{results['val_loss']:.4f}")
+                            
+                            with col3:
+                                st.metric("Val Accuracy", f"{results['val_accuracy']:.3f}")
+                                st.metric("Training Loss", f"{results['final_loss']:.4f}")
+                            
+                            # Store model in session state
+                            st.session_state.nn_model = nn
+                            st.session_state.nn_trained = True
+                            
+                            st.info("💾 Model trained and ready for recommendations!")
+                        
+                        nn.close()
+                        
+                    except ImportError as e:
+                        st.error(f"❌ Missing dependencies: {str(e)}")
+                        st.info("Install with: `pip install tensorflow scikit-learn`")
+                    except Exception as e:
+                        st.error(f"❌ Training error: {str(e)}")
+            
+            st.markdown("---")
+            
+            # Neural Network Recommendations Section
+            st.subheader("🎯 Neural Network Recommendations")
+            
+            if 'nn_trained' in st.session_state and st.session_state.nn_trained:
+                st.success("✅ Neural network model is ready!")
+                
+                session = get_session()
+                
+                # Get anime list for selection
+                anime_list = session.query(Anime.title, Anime.mal_id, Anime.score).filter(
+                    Anime.score.isnot(None)
+                ).order_by(Anime.title).all()
+                
+                if anime_list:
+                    anime_options = {f"{title} (Score: {score:.1f})": mal_id 
+                                   for title, mal_id, score in anime_list}
+                    
+                    selected_anime = st.selectbox(
+                        "Select anime for neural network recommendations:",
+                        options=list(anime_options.keys()),
+                        key="nn_anime_select"
+                    )
+                    
+                    num_recommendations = st.slider("Number of recommendations", 3, 15, 8)
+                    
+                    if st.button("🧠 Get Neural Network Recommendations"):
+                        selected_mal_id = anime_options[selected_anime]
+                        
+                        with st.spinner("Neural network is analyzing similarities..."):
+                            try:
+                                from recommendation_nn import AnimeRecommendationNN
+                                
+                                # Create fresh instance and train
+                                nn = AnimeRecommendationNN()
+                                
+                                # Quick training for demo
+                                train_results, train_error = nn.train_content_model(epochs=20)
+                                
+                                if train_error:
+                                    st.error(f"Training error: {train_error}")
+                                else:
+                                    # Get recommendations
+                                    recommendations, rec_error = nn.get_recommendations(
+                                        selected_mal_id, top_k=num_recommendations
+                                    )
+                                    
+                                    if rec_error:
+                                        st.error(f"Recommendation error: {rec_error}")
+                                    elif recommendations:
+                                        st.success(f"🎉 Neural network found {len(recommendations)} recommendations!")
+                                        
+                                        # Display selected anime info
+                                        selected_anime_data = session.query(Anime).filter(
+                                            Anime.mal_id == selected_mal_id
+                                        ).first()
+                                        
+                                        if selected_anime_data:
+                                            st.markdown(f"### 🎬 Selected: {selected_anime_data.title}")
+                                            st.write(f"**Score**: {selected_anime_data.score}")
+                                            
+                                            genres = [g.name for g in selected_anime_data.genres]
+                                            if genres:
+                                                st.write(f"**Genres**: {', '.join(genres)}")
+                                        
+                                        st.markdown("---")
+                                        
+                                        # Display recommendations
+                                        st.markdown("### 🎯 Neural Network Recommendations")
+                                        
+                                        for i, rec in enumerate(recommendations, 1):
+                                            with st.container():
+                                                rec_col1, rec_col2 = st.columns([1, 4])
+                                                
+                                                with rec_col1:
+                                                    # Try to get image
+                                                    rec_anime = session.query(Anime).filter(
+                                                        Anime.mal_id == rec['mal_id']
+                                                    ).first()
+                                                    
+                                                    if rec_anime and rec_anime.image_url:
+                                                        st.image(rec_anime.image_url, width=80)
+                                                    else:
+                                                        st.write("🖼️")
+                                                
+                                                with rec_col2:
+                                                    st.markdown(f"#### {i}. {rec['title']}")
+                                                    
+                                                    # Similarity score with visual bar
+                                                    similarity_pct = rec['similarity'] * 100
+                                                    st.markdown(f"**Neural Network Similarity**: {similarity_pct:.1f}%")
+                                                    st.progress(rec['similarity'])
+                                                    
+                                                    col_a, col_b, col_c = st.columns(3)
+                                                    with col_a:
+                                                        st.write(f"**Score**: {rec['score']:.1f}")
+                                                    with col_b:
+                                                        st.write(f"**Year**: {rec['year']}")
+                                                    with col_c:
+                                                        st.write(f"**Studio**: {rec['studio']}")
+                                                    
+                                                    genres_clean = rec['genres'].replace('|', ', ')
+                                                    st.write(f"**Genres**: {genres_clean}")
+                                                    
+                                                    # Add explanation
+                                                    if rec['similarity'] > 0.8:
+                                                        st.success("🎯 Excellent match!")
+                                                    elif rec['similarity'] > 0.6:
+                                                        st.info("👍 Good match")
+                                                    else:
+                                                        st.write("📝 Potential interest")
+                                                
+                                                st.markdown("---")
+                                    else:
+                                        st.warning("No recommendations found")
+                                
+                                nn.close()
+                                
+                            except Exception as e:
+                                st.error(f"Error: {str(e)}")
+                                st.write("Make sure TensorFlow is installed: `pip install tensorflow`")
+                
+                session.close()
+                
+            else:
+                st.info("👆 Train the neural network first to enable recommendations!")
+                
+                # Show what neural networks can do
+                st.markdown("#### 🔬 How Neural Networks Work for Recommendations")
+                
+                feature_col1, feature_col2 = st.columns(2)
+                
+                with feature_col1:
+                    st.markdown("""
+                    **Input Features**:
+                    - Episode count (log-transformed)
+                    - Release year (normalized)
+                    - Popularity ranking
+                    - Genre combinations (multi-hot)
+                    - Studio information
+                    - Synopsis length
+                    """)
+                
+                with feature_col2:
+                    st.markdown("""
+                    **Neural Network Learns**:
+                    - Complex feature interactions
+                    - Non-linear relationships
+                    - Hidden patterns in data
+                    - Similarity representations
+                    - User preference proxies
+                    """)
+                
+                st.markdown("""
+                **Advantages over Traditional Methods**:
+                - 🧠 **Deep Learning**: Captures complex, non-linear relationships
+                - 🎯 **Feature Learning**: Automatically discovers important patterns
+                - 🔧 **Flexibility**: Adapts to new data and preferences
+                - 📊 **Scalability**: Handles large datasets efficiently
+                - 🎨 **Embeddings**: Creates rich representations of anime features
+                """)
+            
+        except ImportError:
+            st.error("❌ TensorFlow not installed")
+            st.info("To use neural network recommendations, install TensorFlow:")
+            st.code("pip install tensorflow scikit-learn", language="bash")
+            
+            st.markdown("### 🔧 Installation Instructions")
+            st.markdown("""
+            1. **Open a terminal/command prompt**
+            2. **Activate your virtual environment** (if using one)
+            3. **Run the installation command**:
+               ```bash
+               pip install tensorflow scikit-learn
+               ```
+            4. **Restart the Streamlit app**
+            5. **Come back to this page to train your neural network!**
+            """)
+            
+            st.markdown("### 📚 What You'll Get with Neural Networks")
+            st.markdown("""
+            - **🤖 AI-Powered Recommendations**: Deep learning algorithms
+            - **📈 Advanced Pattern Recognition**: Finds complex relationships
+            - **🎯 Personalized Results**: Learns from anime features and patterns  
+            - **🔬 Feature Embeddings**: Rich numerical representations
+            - **📊 Similarity Scoring**: Neural network-based similarity calculation
+            """)
 
 elif sidebar_option == "Data Quality":
     st.header("🔍 Data Quality & Integrity")
