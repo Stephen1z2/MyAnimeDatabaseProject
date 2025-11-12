@@ -280,6 +280,61 @@ This project represents a complete restart from scratch after getting lost in a 
 
 The restart proved beneficial, resulting in a more robust, scalable, and maintainable codebase that successfully demonstrates modern database concepts and Python development best practices.
 
+## Recent Enhancements & New Features
+
+Since the initial implementation, several major enhancements have been added to improve functionality and user experience:
+
+### **🎭 Character Search System (November 11, 2025)**
+- **Advanced Character Search**: Full-featured search interface for exploring character database
+- **Multi-Filter Support**: Search by character name, role (Main/Supporting), and anime title
+- **Smart Result Grouping**: Characters appearing in multiple anime are grouped together with all appearances
+- **Visual Enhancements**: Character images, role indicators, and anime score displays
+- **Real-time Statistics**: Character count, total appearances, and average appearances per character
+
+### **🔧 Enhanced Data Ingestion (November 11, 2025)**
+- **Smart Character Ingestion**: Improved system that only processes anime without existing character data
+- **Automatic Progress Tracking**: Real-time status showing how many anime need character data
+- **Batch Processing**: Efficient batch ingestion that automatically continues where previous batches left off
+- **No Duplicate Processing**: Intelligent system prevents reprocessing the same anime
+- **Progress Visualization**: Real-time progress bars and status updates during ingestion
+
+### **📊 Advanced Data Explorer (November 11, 2025)**
+- **Dual Character Views**: Toggle between "Character-Anime Relationships" and "Unique Characters Only"
+- **Enhanced Pagination**: Improved pagination system with customizable page sizes (50-500 records)
+- **Advanced Sorting**: Multiple sorting options including character name, anime title, role, and MAL IDs
+- **Relationship Context**: Clear explanations of many-to-many relationships and character appearances
+- **Comprehensive Statistics**: Detailed breakdown of database contents and relationship counts
+
+### **🎨 User Interface Improvements (November 11, 2025)**
+- **Clean Interface**: Removed Streamlit deployment buttons and unnecessary UI elements
+- **Professional Styling**: Custom theme with anime-inspired colors and clean layout
+- **Enhanced Navigation**: Expanded sidebar with dedicated sections for anime and character search
+- **Better Information Display**: Improved tooltips, help text, and contextual information
+- **Responsive Design**: Optimized layout for better user experience
+
+### **📈 Database Expansion (November 11, 2025)**
+- **Scaled Dataset**: Expanded from 500 to 1,499 anime records (3x increase)
+- **Enhanced Character Coverage**: Systematic character ingestion across all anime in database
+- **Comprehensive Metadata**: Added 765+ character records, 221 studios, 78 genres
+- **Relationship Optimization**: 3,470+ anime-genre relationships properly normalized
+- **Performance Tuning**: Efficient queries and proper indexing for fast search operations
+
+### **📚 Documentation & Architecture (November 11, 2025)**
+- **Technology Migration**: Updated documentation from PostgreSQL to SQLite implementation
+- **Clean Development History**: Removed Replit traces and established professional Git workflow
+- **Comprehensive README**: Accurate setup instructions and feature documentation
+- **Project Restart Summary**: Documented database-first approach and architectural decisions
+- **Code Quality**: Improved separation of concerns and modular code structure
+
+**Development Timeline:**
+- **Initial Implementation**: Basic anime database with 500 records
+- **November 11, 2025 - Morning**: Database expansion to 1,499 anime records
+- **November 11, 2025 - Afternoon**: Enhanced Data Explorer with dual character views
+- **November 11, 2025 - Evening**: Character search system and smart ingestion features
+- **November 11, 2025 - Documentation**: Comprehensive feature documentation and README updates
+
+These enhancements transformed the project from a basic database demonstration into a comprehensive, production-ready anime database application with advanced search capabilities and professional user interface design.
+
 ## Credits
 
 - **Data Source**: [MyAnimeList](https://myanimelist.net/) via [Jikan API](https://jikan.moe/)
