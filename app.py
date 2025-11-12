@@ -16,6 +16,24 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Hide Streamlit's default UI elements
+hide_streamlit_style = """
+    <style>
+    /* Hide the deploy button */
+    .stDeployButton {display:none;}
+    
+    /* Hide the hamburger menu */
+    .stMainMenu {display:none;}
+    
+    /* Hide "Made with Streamlit" footer */
+    footer {display:none;}
+    
+    /* Optional: Hide the settings button */
+    .stActionButton {display:none;}
+    </style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 st.title("🎌 MyAnimeList Database Project")
 st.markdown("### Database-focused project with Jikan API & Hugging Face ML")
 
@@ -498,16 +516,47 @@ elif sidebar_option == "Data Explorer":
         with explorer_tabs[3]:
             st.subheader("Characters Data")
             
-            char_data = session.query(
-                Character.name, AnimeCharacter.role, Anime.title
-            ).join(AnimeCharacter, Character.id == AnimeCharacter.character_id
-            ).join(Anime, AnimeCharacter.anime_id == Anime.id).limit(50).all()
+            # Character pagination controls
+            char_per_page = st.selectbox("Characters per page:", [50, 100, 200, 500], index=0, key="char_per_page")
             
-            if char_data:
-                df = pd.DataFrame(char_data, columns=['Character Name', 'Role', 'Anime'])
-                st.dataframe(df, width="stretch", hide_index=True)
+            # Get total character count
+            total_chars = session.query(func.count(Character.id)).scalar()
+            total_char_pages = (total_chars + char_per_page - 1) // char_per_page
+            
+            if total_chars > 0:
+                char_page = st.selectbox(f"Page (1 to {total_char_pages}):", 
+                                       range(1, total_char_pages + 1), key="char_page")
+                offset = (char_page - 1) * char_per_page
+                
+                # Character sorting options
+                char_sort_options = {
+                    "Character Name (A-Z)": Character.name.asc(),
+                    "Character Name (Z-A)": Character.name.desc(),
+                    "Anime Title (A-Z)": Anime.title.asc(),
+                    "Anime Title (Z-A)": Anime.title.desc(),
+                    "Role": AnimeCharacter.role.asc()
+                }
+                
+                char_sort_by = st.selectbox("Sort by:", list(char_sort_options.keys()), key="char_sort")
+                
+                char_data = session.query(
+                    Character.name, AnimeCharacter.role, Anime.title
+                ).join(AnimeCharacter, Character.id == AnimeCharacter.character_id
+                ).join(Anime, AnimeCharacter.anime_id == Anime.id
+                ).order_by(char_sort_options[char_sort_by]
+                ).offset(offset).limit(char_per_page).all()
+                
+                if char_data:
+                    df = pd.DataFrame(char_data, columns=['Character Name', 'Role', 'Anime'])
+                    
+                    # Display pagination info
+                    st.caption(f"Showing {len(char_data)} characters (Page {char_page} of {total_char_pages}) - Total: {total_chars}")
+                    
+                    st.dataframe(df, use_container_width=True, hide_index=True)
+                else:
+                    st.info("No character data found on this page.")
             else:
-                st.info("No character data available.")
+                st.info("No character data available. Use the character ingestion feature to add character data.")
         
         with explorer_tabs[4]:
             st.subheader("ML Features")
