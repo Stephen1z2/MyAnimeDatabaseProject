@@ -45,7 +45,7 @@ if 'data_ingested' not in st.session_state:
 
 sidebar_option = st.sidebar.selectbox(
     "Navigation",
-    ["Database Overview", "Database Schema", "Data Ingestion", "Search Anime", "Data Explorer", "ML Features", "Analytics"]
+    ["Database Overview", "Database Schema", "Data Ingestion", "Search Anime", "Search Characters", "Data Explorer", "ML Features", "Analytics"]
 )
 
 if sidebar_option == "Database Overview":
@@ -269,19 +269,36 @@ elif sidebar_option == "Data Ingestion":
             
             char_col1, char_col2 = st.columns(2)
             
+            # Check how many anime need characters
+            session = get_session()
+            anime_with_chars = session.query(func.count(func.distinct(AnimeCharacter.anime_id))).scalar()
+            total_anime = session.query(func.count(Anime.id)).scalar()
+            anime_without_chars = total_anime - anime_with_chars
+            session.close()
+            
             with char_col1:
-                num_anime_chars = st.number_input("Number of anime to process", min_value=1, max_value=100, value=25, 
-                                                key="char_anime_count")
-                st.info(f"Will ingest characters for top {num_anime_chars} ranked anime")
+                st.info(f"📊 **Character Status:**\n- {anime_with_chars:,} anime have characters\n- {anime_without_chars:,} anime need characters")
+                
+                if anime_without_chars > 0:
+                    max_batch = min(100, anime_without_chars)
+                    num_anime_chars = st.number_input("Number of anime to process", min_value=1, max_value=max_batch, value=min(25, max_batch), 
+                                                    key="char_anime_count")
+                    st.info(f"Will ingest characters for {num_anime_chars} anime **without character data**")
+                else:
+                    st.success("🎉 All anime already have character data!")
                 
             with char_col2:
-                if st.button("Ingest Characters", type="secondary"):
+                if anime_without_chars > 0 and st.button("Ingest Characters", type="secondary"):
                     session = get_session()
-                    anime_list = session.query(Anime).order_by(Anime.rank.asc()).limit(num_anime_chars).all()
+                    # Get anime that DON'T have character data yet
+                    anime_list = session.query(Anime).outerjoin(
+                        AnimeCharacter, Anime.id == AnimeCharacter.anime_id
+                    ).filter(AnimeCharacter.anime_id.is_(None)
+                    ).order_by(Anime.rank.asc()).limit(num_anime_chars).all()
                     session.close()
                     
                     if not anime_list:
-                        st.error("No anime found! Please ingest anime data first.")
+                        st.error("No anime found without character data!")
                     else:
                         progress_bar = st.progress(0)
                         status_text = st.empty()
@@ -396,6 +413,125 @@ elif sidebar_option == "Search Anime":
                             st.write(f"**Synopsis:** {anime.synopsis[:300]}...")
         else:
             st.info("No anime found matching your criteria.")
+        
+        session.close()
+
+elif sidebar_option == "Search Characters":
+    st.header("🎭 Search Character Database")
+    
+    if not st.session_state.db_initialized:
+        st.warning("Please initialize and populate the database first.")
+    else:
+        session = get_session()
+        
+        # Character search interface
+        search_col1, search_col2 = st.columns([3, 1])
+        
+        with search_col1:
+            char_search_query = st.text_input("Search by character name", placeholder="Enter character name...")
+        
+        with search_col2:
+            char_search_type = st.selectbox("Search Type", ["Contains", "Starts With", "Exact"], key="char_search_type")
+        
+        # Filters
+        filter_col1, filter_col2 = st.columns(2)
+        
+        with filter_col1:
+            # Get available roles
+            roles = session.query(AnimeCharacter.role).distinct().filter(AnimeCharacter.role.isnot(None)).all()
+            role_names = ["All"] + [r[0] for r in roles if r[0]]
+            selected_role = st.selectbox("Filter by Role", role_names)
+        
+        with filter_col2:
+            # Get anime titles for filtering
+            anime_titles = session.query(Anime.title).order_by(Anime.title.asc()).limit(100).all()
+            anime_names = ["All"] + [a[0] for a in anime_titles]
+            selected_anime = st.selectbox("Filter by Anime", anime_names)
+        
+        # Build query
+        query = session.query(
+            Character.name,
+            Character.mal_id,
+            Character.image_url,
+            AnimeCharacter.role,
+            Anime.title.label('anime_title'),
+            Anime.score.label('anime_score')
+        ).join(AnimeCharacter, Character.id == AnimeCharacter.character_id
+        ).join(Anime, AnimeCharacter.anime_id == Anime.id)
+        
+        # Apply search filter
+        if char_search_query:
+            if char_search_type == "Contains":
+                query = query.filter(Character.name.ilike(f"%{char_search_query}%"))
+            elif char_search_type == "Starts With":
+                query = query.filter(Character.name.ilike(f"{char_search_query}%"))
+            else:
+                query = query.filter(Character.name.ilike(char_search_query))
+        
+        # Apply role filter
+        if selected_role != "All":
+            query = query.filter(AnimeCharacter.role == selected_role)
+        
+        # Apply anime filter
+        if selected_anime != "All":
+            query = query.filter(Anime.title == selected_anime)
+        
+        # Order by character name
+        query = query.order_by(Character.name.asc())
+        
+        # Execute query
+        results = query.limit(50).all()
+        
+        st.subheader(f"Found {len(results)} characters")
+        
+        if results:
+            # Group results by character name for better display
+            char_groups = {}
+            for result in results:
+                char_name = result.name
+                if char_name not in char_groups:
+                    char_groups[char_name] = []
+                char_groups[char_name].append(result)
+            
+            for char_name, appearances in char_groups.items():
+                # Get the first appearance for main character info
+                main_char = appearances[0]
+                
+                with st.expander(f"🎭 {char_name} ({len(appearances)} anime appearances)"):
+                    char_col1, char_col2 = st.columns([1, 3])
+                    
+                    with char_col1:
+                        if main_char.image_url:
+                            try:
+                                st.image(main_char.image_url, width=150)
+                            except:
+                                st.write("📷 Image unavailable")
+                        else:
+                            st.write("📷 No image")
+                        
+                        st.write(f"**MAL ID:** {main_char.mal_id}")
+                    
+                    with char_col2:
+                        st.write(f"**Character:** {char_name}")
+                        st.write(f"**Appears in {len(appearances)} anime:**")
+                        
+                        # Show all anime appearances
+                        for appearance in appearances:
+                            role_emoji = "⭐" if appearance.role == "Main" else "👥" if appearance.role == "Supporting" else "🎭"
+                            score_text = f" (Score: {appearance.anime_score:.1f})" if appearance.anime_score else ""
+                            st.write(f"  {role_emoji} **{appearance.anime_title}** - {appearance.role}{score_text}")
+        else:
+            st.info("No characters found matching your criteria.")
+        
+        # Show some helpful stats
+        st.markdown("---")
+        total_chars = session.query(func.count(Character.id)).scalar()
+        total_appearances = session.query(func.count(AnimeCharacter.anime_id)).scalar()
+        
+        stat_col1, stat_col2, stat_col3 = st.columns(3)
+        stat_col1.metric("Total Characters", f"{total_chars:,}")
+        stat_col2.metric("Total Character Appearances", f"{total_appearances:,}")
+        stat_col3.metric("Avg Appearances per Character", f"{total_appearances/total_chars:.1f}" if total_chars > 0 else "0")
         
         session.close()
 
