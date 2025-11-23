@@ -24,5 +24,10 @@ tensorflow>=2.15.0
 scikit-learn>=1.3.0
 numpy>=1.24.0
 
+# Additional ML Libraries
+matplotlib>=3.7.0
+seaborn>=0.12.0
+xgboost>=2.0.0
+
 # Environment Variables
 python-dotenv>=1.0.0
