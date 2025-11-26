@@ -1,0 +1,149 @@
+{
+  "Adventure": {
+    "count": 323,
+    "avg_score": 7.707058823529412,
+    "score_std": 0.8161379014411706,
+    "avg_members": 494094.61300309596,
+    "success_rate": 0.46439628482972134
+  },
+  "Drama": {
+    "count": 357,
+    "avg_score": 8.046918767507007,
+    "score_std": 0.7337356522806359,
+    "avg_members": 612236.3949579832,
+    "success_rate": 0.6302521008403361
+  },
+  "Fantasy": {
+    "count": 466,
+    "avg_score": 7.474742489270389,
+    "score_std": 0.7832279761205394,
+    "avg_members": 460013.6974248927,
+    "success_rate": 0.30257510729613735
+  },
+  "Action": {
+    "count": 571,
+    "avg_score": 7.688003502626976,
+    "score_std": 0.8244810425118302,
+    "avg_members": 584964.2609457093,
+    "success_rate": 0.4203152364273205
+  },
+  "Sci-Fi": {
+    "count": 172,
+    "avg_score": 7.923430232558138,
+    "score_std": 0.8020750725490875,
+    "avg_members": 478202.8488372093,
+    "success_rate": 0.5813953488372093
+  },
+  "Suspense": {
+    "count": 130,
+    "avg_score": 7.899307692307693,
+    "score_std": 0.8494532564091392,
+    "avg_members": 840196.1076923077,
+    "success_rate": 0.5846153846153846
+  },
+  "Comedy": {
+    "count": 403,
+    "avg_score": 7.633076923076926,
+    "score_std": 0.760776613900017,
+    "avg_members": 473692.2282878412,
+    "success_rate": 0.36228287841191065
+  },
+  "Supernatural": {
+    "count": 175,
+    "avg_score": 8.029714285714288,
+    "score_std": 0.6918594207843662,
+    "avg_members": 632251.08,
+    "success_rate": 0.6342857142857142
+  },
+  "Romance": {
+    "count": 293,
+    "avg_score": 7.472184300341296,
+    "score_std": 0.7594780156976363,
+    "avg_members": 444669.25255972694,
+    "success_rate": 0.2901023890784983
+  },
+  "Award Winning": {
+    "count": 57,
+    "avg_score": 8.40456140350877,
+    "score_std": 0.38165087905533424,
+    "avg_members": 1192645.649122807,
+    "success_rate": 0.8771929824561403
+  },
+  "Mystery": {
+    "count": 149,
+    "avg_score": 7.979395973154358,
+    "score_std": 0.7425333081872212,
+    "avg_members": 471985.79194630875,
+    "success_rate": 0.610738255033557
+  },
+  "Sports": {
+    "count": 68,
+    "avg_score": 8.101323529411761,
+    "score_std": 0.5500228066147008,
+    "avg_members": 399457.51470588235,
+    "success_rate": 0.6911764705882353
+  },
+  "Slice of Life": {
+    "count": 58,
+    "avg_score": 8.02844827586207,
+    "score_std": 0.5758008967657774,
+    "avg_members": 283799.7931034483,
+    "success_rate": 0.5862068965517241
+  },
+  "Ecchi": {
+    "count": 93,
+    "avg_score": 7.001720430107529,
+    "score_std": 0.6902923508824138,
+    "avg_members": 437533.623655914,
+    "success_rate": 0.10752688172043011
+  },
+  "Horror": {
+    "count": 35,
+    "avg_score": 7.23,
+    "score_std": 0.86554641021455,
+    "avg_members": 566125.5714285715,
+    "success_rate": 0.22857142857142856
+  },
+  "Gourmet": {
+    "count": 20,
+    "avg_score": 7.616,
+    "score_std": 0.5005723040470251,
+    "avg_members": 491006.05,
+    "success_rate": 0.2
+  },
+  "Avant Garde": {
+    "count": 7,
+    "avg_score": 7.57,
+    "score_std": 1.0551145277488443,
+    "avg_members": 803306.4285714285,
+    "success_rate": 0.42857142857142855
+  },
+  "Boys Love": {
+    "count": 12,
+    "avg_score": 7.941666666666666,
+    "score_std": 0.5528904763041942,
+    "avg_members": 259729.16666666666,
+    "success_rate": 0.6666666666666666
+  },
+  "Girls Love": {
+    "count": 11,
+    "avg_score": 7.095454545454545,
+    "score_std": 0.729004302269385,
+    "avg_members": 235860.18181818182,
+    "success_rate": 0.0
+  },
+  "Erotica": {
+    "count": 6,
+    "avg_score": 6.238333333333333,
+    "score_std": 0.6772124235914952,
+    "avg_members": 347323.6666666667,
+    "success_rate": 0.0
+  },
+  "Hentai": {
+    "count": 1,
+    "avg_score": 7.24,
+    "score_std": 0,
+    "avg_members": 158779.0,
+    "success_rate": 0.0
+  }
+}

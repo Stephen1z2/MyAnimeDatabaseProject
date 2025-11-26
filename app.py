@@ -1,11 +1,14 @@
 """
-MyAnimeList Database Project - Clean Refactored Version
+MyAnimeList Database Project with Enhanced ML
+Complete database functionality with advanced machine learning recommendations
 
-This is the main entry point for the refactored anime database application.
-The application has been restructured into a modular architecture for better
-maintainability, testability, and scalability.
-
-Original monolithic version backed up as: app_monolithic.py
+This app includes all original features plus enhanced ML capabilities:
+- Database overview and visualization
+- Anime search and data exploration  
+- Hidden gems discovery using AI analysis
+- Personalized anime recommendations with external data
+- Enhanced ML with 10 years of MyAnimeList data
+- Analytics and database statistics
 """
 
 import streamlit as st
@@ -17,7 +20,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 src_path = os.path.join(current_dir, 'src')
 sys.path.insert(0, src_path)
 
-# Import the main application
+# Import the streamlined main application
 try:
     from src.main import main
     
@@ -25,8 +28,8 @@ try:
         main()
         
 except ImportError as e:
-    st.error(f"Error importing refactored modules: {e}")
-    st.info("If you encounter import issues, try running: `streamlit run src/main.py` instead")
+    st.error(f"Error importing modules: {e}")
+    st.info("If you encounter issues, try running: `streamlit run app_ml_only.py` for the standalone ML app")
 except Exception as e:
     st.error(f"Application error: {e}")
     st.info("Please check the console for detailed error information")

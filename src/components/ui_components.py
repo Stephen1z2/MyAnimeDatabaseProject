@@ -87,27 +87,101 @@ class AnimeSearchComponent:
     
     @staticmethod
     def render_results(results: List[Any]) -> None:
-        """Render search results"""
+        """Render search results with detailed information and images"""
         if not results:
             st.info("No anime found matching your criteria.")
             return
         
         st.success(f"Found {len(results)} anime")
         
-        # Create results DataFrame
-        results_data = []
+        # Display results with expandable details
         for anime in results:
-            results_data.append({
-                "Title": anime.title,
-                "Type": anime.type or "Unknown",
-                "Episodes": anime.episodes or "Unknown",
-                "Score": f"{anime.score:.2f}" if anime.score else "N/A",
-                "Year": anime.year or "Unknown",
-                "MAL ID": anime.mal_id
-            })
-        
-        results_df = pd.DataFrame(results_data)
-        st.dataframe(results_df, use_container_width=True, hide_index=True)
+            # Create a container for each anime
+            with st.container():
+                # Main info in columns
+                col1, col2, col3 = st.columns([3, 1, 1])
+                
+                with col1:
+                    st.markdown(f"### {anime.title}")
+                    if anime.title_english and anime.title_english != anime.title:
+                        st.markdown(f"*English: {anime.title_english}*")
+                
+                with col2:
+                    if anime.score:
+                        st.metric("Score", f"{anime.score:.2f}")
+                    else:
+                        st.metric("Score", "N/A")
+                
+                with col3:
+                    st.write(f"**Type:** {anime.type or 'Unknown'}")
+                    st.write(f"**Episodes:** {anime.episodes or 'Unknown'}")
+                    st.write(f"**Year:** {anime.year or 'Unknown'}")
+                
+                # Expandable details section
+                with st.expander(f"📖 View Details - {anime.title}", expanded=False):
+                    detail_col1, detail_col2 = st.columns([1, 2])
+                    
+                    with detail_col1:
+                        # Display image if available
+                        if hasattr(anime, 'image_url') and anime.image_url:
+                            st.image(anime.image_url, width=200, caption=anime.title)
+                        else:
+                            st.info("No image available")
+                        
+                        # Basic info
+                        st.markdown("**📊 Information:**")
+                        info_data = {
+                            "MAL ID": anime.mal_id,
+                            "Type": anime.type or "Unknown",
+                            "Episodes": anime.episodes or "Unknown", 
+                            "Status": getattr(anime, 'status', 'Unknown'),
+                            "Year": anime.year or "Unknown",
+                            "Season": getattr(anime, 'season', 'Unknown'),
+                            "Source": getattr(anime, 'source', 'Unknown'),
+                            "Rating": getattr(anime, 'rating', 'Unknown')
+                        }
+                        
+                        for key, value in info_data.items():
+                            if value and value != "Unknown":
+                                st.write(f"**{key}:** {value}")
+                    
+                    with detail_col2:
+                        # Synopsis
+                        if anime.synopsis:
+                            st.markdown("**📝 Synopsis:**")
+                            st.write(anime.synopsis)
+                        else:
+                            st.info("No synopsis available")
+                        
+                        # Genres
+                        if anime.genres:
+                            st.markdown("**🎭 Genres:**")
+                            genre_names = [g.name for g in anime.genres]
+                            st.write(", ".join(genre_names))
+                        
+                        # Studios
+                        if anime.studios:
+                            st.markdown("**🏢 Studios:**")
+                            studio_names = [s.name for s in anime.studios]
+                            st.write(", ".join(studio_names))
+                        
+                        # Statistics
+                        if hasattr(anime, 'members') or hasattr(anime, 'favorites'):
+                            st.markdown("**📈 Statistics:**")
+                            if hasattr(anime, 'members') and anime.members:
+                                st.write(f"**Members:** {anime.members:,}")
+                            if hasattr(anime, 'favorites') and anime.favorites:
+                                st.write(f"**Favorites:** {anime.favorites:,}")
+                            if hasattr(anime, 'popularity') and anime.popularity:
+                                st.write(f"**Popularity Rank:** #{anime.popularity}")
+                            if hasattr(anime, 'rank') and anime.rank:
+                                st.write(f"**Overall Rank:** #{anime.rank}")
+                        
+                        # External link
+                        if anime.mal_id:
+                            st.markdown(f"[🔗 View on MyAnimeList](https://myanimelist.net/anime/{anime.mal_id})")
+                
+                st.divider()  # Add separator between anime entries
 
 
 class CharacterSearchComponent:
@@ -135,27 +209,89 @@ class CharacterSearchComponent:
     
     @staticmethod
     def render_results(results: List[Any]) -> None:
-        """Render character search results"""
+        """Render character search results with detailed information"""
         if not results:
             st.info("No characters found matching your criteria.")
             return
         
         st.success(f"Found {len(results)} character-anime relationships")
         
-        # Create results DataFrame
-        results_data = []
+        # Group results by character to avoid duplicates
+        character_groups = {}
         for char_name, image_url, role, anime_title, anime_score, char_mal_id, anime_mal_id in results:
-            results_data.append({
-                "Character": char_name,
-                "Role": role or "Unknown",
-                "Anime": anime_title,
-                "Anime Score": f"{anime_score:.2f}" if anime_score else "N/A",
-                "Character MAL ID": char_mal_id,
-                "Anime MAL ID": anime_mal_id
+            if char_name not in character_groups:
+                character_groups[char_name] = {
+                    'image_url': image_url,
+                    'mal_id': char_mal_id,
+                    'appearances': []
+                }
+            character_groups[char_name]['appearances'].append({
+                'anime_title': anime_title,
+                'role': role,
+                'anime_score': anime_score,
+                'anime_mal_id': anime_mal_id
             })
         
-        results_df = pd.DataFrame(results_data)
-        st.dataframe(results_df, use_container_width=True, hide_index=True)
+        # Display characters with expandable details
+        for char_name, char_data in character_groups.items():
+            with st.container():
+                # Character header
+                col1, col2 = st.columns([3, 1])
+                
+                with col1:
+                    st.markdown(f"### 👤 {char_name}")
+                    appearances_count = len(char_data['appearances'])
+                    st.write(f"Appears in {appearances_count} anime")
+                
+                with col2:
+                    avg_score = sum([app['anime_score'] for app in char_data['appearances'] if app['anime_score']]) / len([app for app in char_data['appearances'] if app['anime_score']])
+                    if avg_score:
+                        st.metric("Avg Anime Score", f"{avg_score:.2f}")
+                
+                # Expandable character details
+                with st.expander(f"👁️ View Character Details - {char_name}", expanded=False):
+                    detail_col1, detail_col2 = st.columns([1, 2])
+                    
+                    with detail_col1:
+                        # Character image
+                        if char_data['image_url']:
+                            st.image(char_data['image_url'], width=200, caption=char_name)
+                        else:
+                            st.info("No character image available")
+                        
+                        # Character info
+                        if char_data['mal_id']:
+                            st.write(f"**MAL ID:** {char_data['mal_id']}")
+                            st.markdown(f"[🔗 View on MyAnimeList](https://myanimelist.net/character/{char_data['mal_id']})")
+                    
+                    with detail_col2:
+                        # Anime appearances
+                        st.markdown("**🎬 Anime Appearances:**")
+                        
+                        for appearance in char_data['appearances']:
+                            with st.container():
+                                app_col1, app_col2, app_col3 = st.columns([2, 1, 1])
+                                
+                                with app_col1:
+                                    st.write(f"**{appearance['anime_title']}**")
+                                
+                                with app_col2:
+                                    role_emoji = "⭐" if appearance['role'] == "Main" else "🎭"
+                                    st.write(f"{role_emoji} {appearance['role'] or 'Unknown'}")
+                                
+                                with app_col3:
+                                    if appearance['anime_score']:
+                                        st.write(f"⭐ {appearance['anime_score']:.1f}")
+                                    else:
+                                        st.write("No score")
+                                
+                                # Link to anime
+                                if appearance['anime_mal_id']:
+                                    st.caption(f"[🔗 View Anime](https://myanimelist.net/anime/{appearance['anime_mal_id']})")
+                                
+                                st.write("---")
+                
+                st.divider()  # Separator between characters
 
 
 class DistributionChartComponent:

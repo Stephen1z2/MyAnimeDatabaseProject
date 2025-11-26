@@ -13,17 +13,13 @@ PAGE_CONFIG = {
 # Navigation options
 NAVIGATION_OPTIONS = [
     "Database Overview",
-    "Database Schema", 
-    "Database Visualization",
-    "Data Ingestion",
+    "Database Visualization", 
     "Search Anime",
-    "Search Characters", 
+    "Search Characters",
+    "💎 Hidden Gems Finder",
+    "🎯 Smart Recommendations", 
+    "🚀 Enhanced ML",
     "Data Explorer",
-    "Recommendations",
-    "Neural Network",
-    "Machine Learning",
-    "Data Quality",
-    "ML Features",
     "Analytics"
 ]
 

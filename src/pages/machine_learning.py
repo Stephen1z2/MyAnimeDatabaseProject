@@ -19,6 +19,13 @@ from sqlalchemy import func
 from src.components.ui_components import MetricsComponent, ErrorHandlerComponent
 from src.utils.ui_helpers import show_warning_message, show_success_message, show_info_message
 
+# Import enhanced ML functionality
+try:
+    from src.pages.enhanced_ml import render_enhanced_machine_learning
+    ENHANCED_ML_AVAILABLE = True
+except ImportError:
+    ENHANCED_ML_AVAILABLE = False
+
 
 def render_machine_learning():
     """Render the Machine Learning page"""
@@ -46,10 +53,17 @@ def render_machine_learning():
         # ML Mode Selection
         ml_mode = st.selectbox(
             "Choose ML Analysis Type",
-            ["🎯 Hidden Gem Finder", "Score Prediction", "Genre Classification", "Clustering Analysis", "Feature Analysis", "Model Comparison"]
+            ["🚀 Enhanced External Data ML", "🎯 Hidden Gem Finder", "Score Prediction", "Genre Classification", "Clustering Analysis", "Feature Analysis", "Model Comparison"]
         )
         
-        if ml_mode == "🎯 Hidden Gem Finder":
+        if ml_mode == "🚀 Enhanced External Data ML":
+            if ENHANCED_ML_AVAILABLE:
+                render_enhanced_machine_learning()
+            else:
+                st.error("❌ Enhanced ML module not available")
+                show_info_message("Install required packages: `pip install requests`")
+        
+        elif ml_mode == "🎯 Hidden Gem Finder":
             _render_hidden_gem_finder()
         
         elif ml_mode == "Score Prediction":

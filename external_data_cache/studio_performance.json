@@ -1,0 +1,1008 @@
+{
+  "Madhouse": {
+    "anime_count": 51,
+    "avg_score": 8.215882352941176,
+    "score_consistency": 0.9357479821009111,
+    "avg_popularity": 798662.1568627451,
+    "hit_rate": 0.29411764705882354,
+    "top_genres": {
+      "Drama": 19,
+      "Action": 16,
+      "Fantasy": 12,
+      "Sports": 12,
+      "Adventure": 11
+    }
+  },
+  "MAPPA": {
+    "anime_count": 43,
+    "avg_score": 8.112325581395346,
+    "score_consistency": 0.9097393549008005,
+    "avg_popularity": 937195.3953488372,
+    "hit_rate": 0.3488372093023256,
+    "top_genres": {
+      "Action": 33,
+      "Drama": 16,
+      "Suspense": 12,
+      "Adventure": 12,
+      "Supernatural": 12
+    }
+  },
+  "Bones": {
+    "anime_count": 48,
+    "avg_score": 8.040208333333336,
+    "score_consistency": 0.9417440302151833,
+    "avg_popularity": 864841.3333333334,
+    "hit_rate": 0.14583333333333334,
+    "top_genres": {
+      "Action": 38,
+      "Mystery": 11,
+      "Comedy": 9,
+      "Supernatural": 8,
+      "Drama": 6
+    }
+  },
+  "White Fox": {
+    "anime_count": 23,
+    "avg_score": 8.071304347826088,
+    "score_consistency": 0.9289771833778109,
+    "avg_popularity": 827631.7391304348,
+    "hit_rate": 0.13043478260869565,
+    "top_genres": {
+      "Fantasy": 14,
+      "Suspense": 13,
+      "Drama": 12,
+      "Sci-Fi": 8,
+      "Adventure": 7
+    }
+  },
+  "Studio Pierrot": {
+    "anime_count": 27,
+    "avg_score": 7.917777777777778,
+    "score_consistency": 0.8743719601325444,
+    "avg_popularity": 612464.1481481482,
+    "hit_rate": 0.37037037037037035,
+    "top_genres": {
+      "Action": 25,
+      "Fantasy": 13,
+      "Adventure": 7,
+      "Suspense": 6,
+      "Supernatural": 5
+    }
+  },
+  "Studio Signpost": {
+    "anime_count": 5,
+    "avg_score": 8.834,
+    "score_consistency": 0.9845078571182947,
+    "avg_popularity": 83577.8,
+    "hit_rate": 1.0,
+    "top_genres": {
+      "Action": 5
+    }
+  },
+  "Wit Studio": {
+    "anime_count": 34,
+    "avg_score": 8.101176470588236,
+    "score_consistency": 0.9249133717479785,
+    "avg_popularity": 1167574.7352941176,
+    "hit_rate": 0.2647058823529412,
+    "top_genres": {
+      "Action": 27,
+      "Drama": 17,
+      "Suspense": 13,
+      "Fantasy": 10,
+      "Adventure": 6
+    }
+  },
+  "Bandai Namco Pictures": {
+    "anime_count": 18,
+    "avg_score": 8.602777777777781,
+    "score_consistency": 0.9461795237392436,
+    "avg_popularity": 300032.05555555556,
+    "hit_rate": 0.6666666666666666,
+    "top_genres": {
+      "Comedy": 17,
+      "Action": 14,
+      "Sci-Fi": 12,
+      "Fantasy": 4,
+      "Drama": 2
+    }
+  },
+  "Toei Animation": {
+    "anime_count": 18,
+    "avg_score": 8.08388888888889,
+    "score_consistency": 0.9170272259027656,
+    "avg_popularity": 365699.8333333333,
+    "hit_rate": 0.2777777777777778,
+    "top_genres": {
+      "Action": 14,
+      "Adventure": 12,
+      "Fantasy": 12,
+      "Comedy": 5,
+      "Award Winning": 2
+    }
+  },
+  "Sunrise": {
+    "anime_count": 18,
+    "avg_score": 8.343333333333334,
+    "score_consistency": 0.9258519645180792,
+    "avg_popularity": 571122.7777777778,
+    "hit_rate": 0.4444444444444444,
+    "top_genres": {
+      "Sci-Fi": 16,
+      "Action": 10,
+      "Comedy": 9,
+      "Drama": 6,
+      "Award Winning": 3
+    }
+  },
+  "A-1 Pictures": {
+    "anime_count": 75,
+    "avg_score": 7.7893333333333326,
+    "score_consistency": 0.9188621804893005,
+    "avg_popularity": 659844.8133333334,
+    "hit_rate": 0.13333333333333333,
+    "top_genres": {
+      "Action": 32,
+      "Comedy": 28,
+      "Romance": 26,
+      "Fantasy": 26,
+      "Adventure": 18
+    }
+  },
+  "TMS Entertainment": {
+    "anime_count": 34,
+    "avg_score": 7.973529411764705,
+    "score_consistency": 0.9231007846604807,
+    "avg_popularity": 522525.79411764705,
+    "hit_rate": 0.14705882352941177,
+    "top_genres": {
+      "Romance": 18,
+      "Comedy": 16,
+      "Adventure": 12,
+      "Sci-Fi": 10,
+      "Drama": 9
+    }
+  },
+  "Kyoto Animation": {
+    "anime_count": 31,
+    "avg_score": 8.270645161290322,
+    "score_consistency": 0.9423510023438944,
+    "avg_popularity": 664384.8387096775,
+    "hit_rate": 0.2903225806451613,
+    "top_genres": {
+      "Drama": 18,
+      "Award Winning": 7,
+      "Supernatural": 7,
+      "Comedy": 5,
+      "Slice of Life": 4
+    }
+  },
+  "OLM": {
+    "anime_count": 16,
+    "avg_score": 8.108125,
+    "score_consistency": 0.9188044627677385,
+    "avg_popularity": 480564.9375,
+    "hit_rate": 0.375,
+    "top_genres": {
+      "Mystery": 7,
+      "Drama": 6,
+      "Adventure": 5,
+      "Fantasy": 5,
+      "Comedy": 5
+    }
+  },
+  "Shaft": {
+    "anime_count": 28,
+    "avg_score": 8.258571428571429,
+    "score_consistency": 0.9100509158878214,
+    "avg_popularity": 492241.53571428574,
+    "hit_rate": 0.42857142857142855,
+    "top_genres": {
+      "Mystery": 17,
+      "Supernatural": 17,
+      "Comedy": 11,
+      "Drama": 8,
+      "Action": 7
+    }
+  },
+  "CoMix Wave Films": {
+    "anime_count": 7,
+    "avg_score": 8.26,
+    "score_consistency": 0.9309856565941165,
+    "avg_popularity": 1323381.0,
+    "hit_rate": 0.2857142857142857,
+    "top_genres": {
+      "Drama": 5,
+      "Award Winning": 4,
+      "Supernatural": 4,
+      "Romance": 3,
+      "Adventure": 2
+    }
+  },
+  "Production I.G": {
+    "anime_count": 51,
+    "avg_score": 8.145294117647055,
+    "score_consistency": 0.9395215366653732,
+    "avg_popularity": 521015.60784313723,
+    "hit_rate": 0.19607843137254902,
+    "top_genres": {
+      "Sports": 23,
+      "Sci-Fi": 14,
+      "Mystery": 12,
+      "Drama": 11,
+      "Suspense": 10
+    }
+  },
+  "Studio Ghibli": {
+    "anime_count": 7,
+    "avg_score": 8.394285714285713,
+    "score_consistency": 0.9517523678687964,
+    "avg_popularity": 1050241.0,
+    "hit_rate": 0.5714285714285714,
+    "top_genres": {
+      "Adventure": 6,
+      "Award Winning": 6,
+      "Fantasy": 5,
+      "Drama": 3,
+      "Romance": 1
+    }
+  },
+  "CloverWorks": {
+    "anime_count": 35,
+    "avg_score": 7.9854285714285735,
+    "score_consistency": 0.9144976827703014,
+    "avg_popularity": 742658.1428571428,
+    "hit_rate": 0.14285714285714285,
+    "top_genres": {
+      "Romance": 13,
+      "Comedy": 12,
+      "Drama": 10,
+      "Action": 9,
+      "Supernatural": 7
+    }
+  },
+  "Shin-Ei Animation": {
+    "anime_count": 12,
+    "avg_score": 7.956666666666667,
+    "score_consistency": 0.9054187830223612,
+    "avg_popularity": 283192.5,
+    "hit_rate": 0.16666666666666666,
+    "top_genres": {
+      "Comedy": 9,
+      "Romance": 9,
+      "Fantasy": 3,
+      "Adventure": 2,
+      "Action": 2
+    }
+  },
+  "LAN Studio": {
+    "anime_count": 5,
+    "avg_score": 8.688,
+    "score_consistency": 0.9949565142034515,
+    "avg_popularity": 289412.4,
+    "hit_rate": 1.0,
+    "top_genres": {
+      "Drama": 4,
+      "Mystery": 4,
+      "Suspense": 4,
+      "Action": 1
+    }
+  },
+  "Artland": {
+    "anime_count": 7,
+    "avg_score": 8.19,
+    "score_consistency": 0.8685754154511965,
+    "avg_popularity": 295169.4285714286,
+    "hit_rate": 0.7142857142857143,
+    "top_genres": {
+      "Adventure": 7,
+      "Mystery": 6,
+      "Slice of Life": 6,
+      "Supernatural": 6,
+      "Action": 1
+    }
+  },
+  "ufotable": {
+    "anime_count": 25,
+    "avg_score": 8.292800000000002,
+    "score_consistency": 0.947127789895067,
+    "avg_popularity": 1027446.72,
+    "hit_rate": 0.36,
+    "top_genres": {
+      "Action": 25,
+      "Fantasy": 14,
+      "Supernatural": 11,
+      "Mystery": 2,
+      "Romance": 2
+    }
+  },
+  "Doga Kobo": {
+    "anime_count": 25,
+    "avg_score": 7.6259999999999994,
+    "score_consistency": 0.9137192897129354,
+    "avg_popularity": 406291.6,
+    "hit_rate": 0.2,
+    "top_genres": {
+      "Comedy": 13,
+      "Drama": 8,
+      "Romance": 7,
+      "Slice of Life": 3,
+      "Award Winning": 2
+    }
+  },
+  "Studio Deen": {
+    "anime_count": 22,
+    "avg_score": 7.741818181818181,
+    "score_consistency": 0.8968215777998411,
+    "avg_popularity": 522928.45454545453,
+    "hit_rate": 0.22727272727272727,
+    "top_genres": {
+      "Fantasy": 9,
+      "Comedy": 8,
+      "Adventure": 8,
+      "Drama": 7,
+      "Action": 6
+    }
+  },
+  "B.CMAY PICTURES": {
+    "anime_count": 7,
+    "avg_score": 8.4,
+    "score_consistency": 0.9668942006117235,
+    "avg_popularity": 181423.2857142857,
+    "hit_rate": 0.2857142857142857,
+    "top_genres": {
+      "Action": 7,
+      "Fantasy": 6,
+      "Adventure": 5,
+      "Mystery": 5,
+      "Drama": 4
+    }
+  },
+  "CygamesPictures": {
+    "anime_count": 6,
+    "avg_score": 7.855000000000001,
+    "score_consistency": 0.8920758669443996,
+    "avg_popularity": 121402.66666666667,
+    "hit_rate": 0.3333333333333333,
+    "top_genres": {
+      "Sports": 3,
+      "Fantasy": 3,
+      "Drama": 2,
+      "Adventure": 2,
+      "Comedy": 2
+    }
+  },
+  "Kinema Citrus": {
+    "anime_count": 15,
+    "avg_score": 8.178666666666665,
+    "score_consistency": 0.9230232106914134,
+    "avg_popularity": 651210.8666666667,
+    "hit_rate": 0.4666666666666667,
+    "top_genres": {
+      "Drama": 14,
+      "Fantasy": 13,
+      "Adventure": 12,
+      "Mystery": 9,
+      "Sci-Fi": 9
+    }
+  },
+  "Brain's Base": {
+    "anime_count": 17,
+    "avg_score": 7.903529411764707,
+    "score_consistency": 0.9173844715117464,
+    "avg_popularity": 471657.4117647059,
+    "hit_rate": 0.17647058823529413,
+    "top_genres": {
+      "Supernatural": 13,
+      "Slice of Life": 6,
+      "Romance": 6,
+      "Drama": 4,
+      "Adventure": 3
+    }
+  },
+  "Trigger": {
+    "anime_count": 12,
+    "avg_score": 7.866666666666667,
+    "score_consistency": 0.9248555229291369,
+    "avg_popularity": 637425.8333333334,
+    "hit_rate": 0.3333333333333333,
+    "top_genres": {
+      "Sci-Fi": 7,
+      "Adventure": 5,
+      "Comedy": 5,
+      "Fantasy": 5,
+      "Action": 4
+    }
+  },
+  "Studio Bind": {
+    "anime_count": 10,
+    "avg_score": 8.190000000000001,
+    "score_consistency": 0.9520429847076747,
+    "avg_popularity": 759446.9,
+    "hit_rate": 0.2,
+    "top_genres": {
+      "Adventure": 9,
+      "Drama": 9,
+      "Fantasy": 9,
+      "Ecchi": 8,
+      "Comedy": 1
+    }
+  },
+  "Shuka": {
+    "anime_count": 12,
+    "avg_score": 8.320833333333335,
+    "score_consistency": 0.9648216396142141,
+    "avg_popularity": 262774.0,
+    "hit_rate": 0.4166666666666667,
+    "top_genres": {
+      "Supernatural": 11,
+      "Slice of Life": 8,
+      "Action": 4,
+      "Mystery": 3,
+      "Drama": 1
+    }
+  },
+  "David Production": {
+    "anime_count": 17,
+    "avg_score": 8.082352941176469,
+    "score_consistency": 0.9442913118654025,
+    "avg_popularity": 744824.9411764706,
+    "hit_rate": 0.35294117647058826,
+    "top_genres": {
+      "Action": 14,
+      "Adventure": 10,
+      "Comedy": 4,
+      "Sci-Fi": 3,
+      "Fantasy": 2
+    }
+  },
+  "Studio VOLN": {
+    "anime_count": 6,
+    "avg_score": 7.800000000000001,
+    "score_consistency": 0.9171394079671671,
+    "avg_popularity": 475854.0,
+    "hit_rate": 0.3333333333333333,
+    "top_genres": {
+      "Action": 4,
+      "Drama": 3,
+      "Adventure": 3,
+      "Supernatural": 3,
+      "Romance": 2
+    }
+  },
+  "J.C.Staff": {
+    "anime_count": 66,
+    "avg_score": 7.483030303030304,
+    "score_consistency": 0.9141096478021266,
+    "avg_popularity": 472407.4393939394,
+    "hit_rate": 0.015151515151515152,
+    "top_genres": {
+      "Fantasy": 36,
+      "Comedy": 29,
+      "Action": 26,
+      "Adventure": 22,
+      "Ecchi": 16
+    }
+  },
+  "Zero-G": {
+    "anime_count": 13,
+    "avg_score": 7.531538461538462,
+    "score_consistency": 0.9214439293348096,
+    "avg_popularity": 323061.76923076925,
+    "hit_rate": 0.07692307692307693,
+    "top_genres": {
+      "Comedy": 9,
+      "Action": 4,
+      "Romance": 4,
+      "Fantasy": 4,
+      "Supernatural": 2
+    }
+  },
+  "C-Station": {
+    "anime_count": 5,
+    "avg_score": 8.379999999999999,
+    "score_consistency": 0.9856801909307876,
+    "avg_popularity": 330742.2,
+    "hit_rate": 0.4,
+    "top_genres": {
+      "Slice of Life": 5
+    }
+  },
+  "Lerche": {
+    "anime_count": 23,
+    "avg_score": 7.725217391304346,
+    "score_consistency": 0.9246267062150072,
+    "avg_popularity": 648533.9130434783,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Drama": 9,
+      "Action": 8,
+      "Suspense": 8,
+      "Comedy": 5,
+      "Fantasy": 5
+    }
+  },
+  "Science SARU": {
+    "anime_count": 8,
+    "avg_score": 7.888750000000001,
+    "score_consistency": 0.9144523856300226,
+    "avg_popularity": 540174.75,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Supernatural": 6,
+      "Action": 4,
+      "Comedy": 4,
+      "Drama": 3,
+      "Avant Garde": 1
+    }
+  },
+  "Geno Studio": {
+    "anime_count": 5,
+    "avg_score": 8.244,
+    "score_consistency": 0.9727600377757013,
+    "avg_popularity": 256635.8,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Action": 5,
+      "Adventure": 5
+    }
+  },
+  "Platinum Vision": {
+    "anime_count": 7,
+    "avg_score": 7.532857142857142,
+    "score_consistency": 0.9044687953745028,
+    "avg_popularity": 238690.7142857143,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Drama": 4,
+      "Action": 3,
+      "Supernatural": 2,
+      "Romance": 2,
+      "Comedy": 1
+    }
+  },
+  "Egg Firm": {
+    "anime_count": 6,
+    "avg_score": 8.326666666666666,
+    "score_consistency": 0.9840373082166718,
+    "avg_popularity": 721574.1666666666,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Comedy": 6
+    }
+  },
+  "P.A. Works": {
+    "anime_count": 17,
+    "avg_score": 7.558235294117646,
+    "score_consistency": 0.911339869769868,
+    "avg_popularity": 370249.9411764706,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Drama": 9,
+      "Comedy": 5,
+      "Fantasy": 4,
+      "Action": 4,
+      "Award Winning": 1
+    }
+  },
+  "Orange": {
+    "anime_count": 6,
+    "avg_score": 7.888333333333333,
+    "score_consistency": 0.9419378202370627,
+    "avg_popularity": 494840.1666666667,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Action": 4,
+      "Drama": 4,
+      "Fantasy": 2,
+      "Mystery": 2,
+      "Sci-Fi": 2
+    }
+  },
+  "SynergySP": {
+    "anime_count": 9,
+    "avg_score": 7.7011111111111115,
+    "score_consistency": 0.8909587585659328,
+    "avg_popularity": 163614.22222222222,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Sports": 4,
+      "Drama": 3,
+      "Romance": 3,
+      "Action": 3,
+      "Comedy": 2
+    }
+  },
+  "ENGI": {
+    "anime_count": 9,
+    "avg_score": 6.987777777777778,
+    "score_consistency": 0.9134356998089916,
+    "avg_popularity": 273719.0,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Romance": 6,
+      "Comedy": 5,
+      "Fantasy": 4,
+      "Drama": 1,
+      "Sports": 1
+    }
+  },
+  "LIDENFILMS": {
+    "anime_count": 21,
+    "avg_score": 7.40095238095238,
+    "score_consistency": 0.9194978215645965,
+    "avg_popularity": 396522.04761904763,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Action": 10,
+      "Romance": 7,
+      "Drama": 6,
+      "Comedy": 4,
+      "Fantasy": 4
+    }
+  },
+  "feel.": {
+    "anime_count": 12,
+    "avg_score": 7.627499999999999,
+    "score_consistency": 0.9140633069136795,
+    "avg_popularity": 495000.0,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Comedy": 8,
+      "Romance": 7,
+      "Drama": 2,
+      "Gourmet": 1,
+      "Sci-Fi": 1
+    }
+  },
+  "SILVER LINK.": {
+    "anime_count": 35,
+    "avg_score": 7.0368571428571425,
+    "score_consistency": 0.9363743257367818,
+    "avg_popularity": 360109.1142857143,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Fantasy": 20,
+      "Comedy": 18,
+      "Action": 16,
+      "Romance": 16,
+      "Ecchi": 9
+    }
+  },
+  "8bit": {
+    "anime_count": 20,
+    "avg_score": 7.633,
+    "score_consistency": 0.9290504152012236,
+    "avg_popularity": 532520.5,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Fantasy": 15,
+      "Action": 12,
+      "Comedy": 10,
+      "Romance": 4,
+      "Drama": 3
+    }
+  },
+  "TROYCA": {
+    "anime_count": 6,
+    "avg_score": 7.358333333333334,
+    "score_consistency": 0.8919291764557079,
+    "avg_popularity": 277619.1666666667,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Drama": 3,
+      "Action": 2,
+      "Sci-Fi": 1,
+      "Mystery": 1,
+      "Suspense": 1
+    }
+  },
+  "Satelight": {
+    "anime_count": 6,
+    "avg_score": 7.609999999999999,
+    "score_consistency": 0.9407243660123538,
+    "avg_popularity": 421279.6666666667,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Action": 4,
+      "Drama": 4,
+      "Fantasy": 3,
+      "Comedy": 2,
+      "Adventure": 2
+    }
+  },
+  "Xebec": {
+    "anime_count": 5,
+    "avg_score": 7.1819999999999995,
+    "score_consistency": 0.8964138618993224,
+    "avg_popularity": 263771.8,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Ecchi": 4,
+      "Action": 2,
+      "Sci-Fi": 2,
+      "Comedy": 2,
+      "Romance": 2
+    }
+  },
+  "Gonzo": {
+    "anime_count": 7,
+    "avg_score": 6.801428571428572,
+    "score_consistency": 0.8249205969954505,
+    "avg_popularity": 247582.42857142858,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Comedy": 3,
+      "Drama": 3,
+      "Romance": 3,
+      "Fantasy": 3,
+      "Sci-Fi": 2
+    }
+  },
+  "Tezuka Productions": {
+    "anime_count": 9,
+    "avg_score": 7.379999999999999,
+    "score_consistency": 0.8956177732171525,
+    "avg_popularity": 617036.1111111111,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Romance": 5,
+      "Comedy": 5,
+      "Action": 4,
+      "Fantasy": 4,
+      "Adventure": 3
+    }
+  },
+  "Nexus": {
+    "anime_count": 6,
+    "avg_score": 7.791666666666667,
+    "score_consistency": 0.9340544785088378,
+    "avg_popularity": 598810.1666666666,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Action": 5,
+      "Fantasy": 4,
+      "Comedy": 3,
+      "Romance": 1,
+      "Ecchi": 1
+    }
+  },
+  "C2C": {
+    "anime_count": 9,
+    "avg_score": 7.766666666666666,
+    "score_consistency": 0.9551753772046458,
+    "avg_popularity": 343582.3333333333,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Fantasy": 8,
+      "Adventure": 7,
+      "Action": 5,
+      "Comedy": 3,
+      "Drama": 1
+    }
+  },
+  "Diomedéa": {
+    "anime_count": 14,
+    "avg_score": 6.740000000000001,
+    "score_consistency": 0.9131221166018252,
+    "avg_popularity": 310424.64285714284,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Fantasy": 5,
+      "Romance": 5,
+      "Action": 4,
+      "Drama": 4,
+      "Comedy": 4
+    }
+  },
+  "Passione": {
+    "anime_count": 12,
+    "avg_score": 6.977500000000002,
+    "score_consistency": 0.9220934653345445,
+    "avg_popularity": 354432.0833333333,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Action": 6,
+      "Fantasy": 6,
+      "Comedy": 4,
+      "Adventure": 4,
+      "Romance": 3
+    }
+  },
+  "Studio 3Hz": {
+    "anime_count": 6,
+    "avg_score": 7.131666666666667,
+    "score_consistency": 0.9376161620014567,
+    "avg_popularity": 347355.8333333333,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Action": 3,
+      "Comedy": 3,
+      "Sci-Fi": 2,
+      "Supernatural": 2,
+      "Adventure": 1
+    }
+  },
+  "Project No.9": {
+    "anime_count": 14,
+    "avg_score": 6.687142857142858,
+    "score_consistency": 0.9029811255753567,
+    "avg_popularity": 290644.14285714284,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Romance": 8,
+      "Comedy": 6,
+      "Action": 5,
+      "Fantasy": 5,
+      "Adventure": 3
+    }
+  },
+  "Lay-duce": {
+    "anime_count": 5,
+    "avg_score": 7.404000000000001,
+    "score_consistency": 0.941488317378445,
+    "avg_popularity": 370228.2,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Romance": 3,
+      "Action": 2,
+      "Fantasy": 2,
+      "Drama": 2,
+      "Adventure": 1
+    }
+  },
+  "asread.": {
+    "anime_count": 5,
+    "avg_score": 6.544,
+    "score_consistency": 0.8908352916098542,
+    "avg_popularity": 379124.4,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Action": 4,
+      "Adventure": 3,
+      "Fantasy": 3,
+      "Comedy": 1,
+      "Romance": 1
+    }
+  },
+  "Connect": {
+    "anime_count": 8,
+    "avg_score": 7.1025,
+    "score_consistency": 0.9472023600049274,
+    "avg_popularity": 287129.25,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Action": 4,
+      "Fantasy": 4,
+      "Comedy": 4,
+      "Ecchi": 3,
+      "Romance": 3
+    }
+  },
+  "Ajia-do": {
+    "anime_count": 8,
+    "avg_score": 7.651249999999999,
+    "score_consistency": 0.9227716133173547,
+    "avg_popularity": 355159.875,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Fantasy": 5,
+      "Action": 3,
+      "Comedy": 2,
+      "Romance": 2,
+      "Ecchi": 1
+    }
+  },
+  "PINE JAM": {
+    "anime_count": 5,
+    "avg_score": 6.965999999999999,
+    "score_consistency": 0.9358759962037275,
+    "avg_popularity": 393326.6,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Romance": 3,
+      "Ecchi": 2,
+      "Comedy": 2,
+      "Slice of Life": 1,
+      "Drama": 1
+    }
+  },
+  "Studio Gokumi": {
+    "anime_count": 6,
+    "avg_score": 6.6116666666666655,
+    "score_consistency": 0.9146371777060299,
+    "avg_popularity": 316403.0,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Comedy": 4,
+      "Romance": 3,
+      "Ecchi": 1,
+      "Sci-Fi": 1,
+      "Erotica": 1
+    }
+  },
+  "EMT Squared": {
+    "anime_count": 7,
+    "avg_score": 6.574285714285715,
+    "score_consistency": 0.9129839925770474,
+    "avg_popularity": 277918.0,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Fantasy": 6,
+      "Action": 4,
+      "Adventure": 4,
+      "Comedy": 3,
+      "Romance": 3
+    }
+  },
+  "Arvo Animation": {
+    "anime_count": 5,
+    "avg_score": 7.097999999999999,
+    "score_consistency": 0.9516927556619572,
+    "avg_popularity": 274958.2,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Comedy": 3,
+      "Romance": 3,
+      "Fantasy": 3,
+      "Ecchi": 1,
+      "Action": 1
+    }
+  },
+  "Geek Toys": {
+    "anime_count": 9,
+    "avg_score": 7.049999999999999,
+    "score_consistency": 0.9134635515309524,
+    "avg_popularity": 239788.11111111112,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Action": 7,
+      "Fantasy": 7,
+      "Romance": 4,
+      "Sci-Fi": 3,
+      "Ecchi": 2
+    }
+  },
+  "Maho Film": {
+    "anime_count": 8,
+    "avg_score": 6.88125,
+    "score_consistency": 0.9464109009615693,
+    "avg_popularity": 207825.75,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Fantasy": 8,
+      "Adventure": 4,
+      "Comedy": 3,
+      "Slice of Life": 2,
+      "Action": 2
+    }
+  },
+  "Seven Arcs": {
+    "anime_count": 6,
+    "avg_score": 7.298333333333332,
+    "score_consistency": 0.9243175754536892,
+    "avg_popularity": 369176.0,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Drama": 2,
+      "Comedy": 2,
+      "Romance": 2,
+      "Action": 2,
+      "Fantasy": 2
+    }
+  },
+  "Yokohama Animation Lab": {
+    "anime_count": 5,
+    "avg_score": 6.922,
+    "score_consistency": 0.9202260015150983,
+    "avg_popularity": 202091.6,
+    "hit_rate": 0.0,
+    "top_genres": {
+      "Fantasy": 5,
+      "Action": 3,
+      "Comedy": 2,
+      "Adventure": 2,
+      "Drama": 1
+    }
+  }
+}
