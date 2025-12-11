@@ -1,15 +1,36 @@
 # MyAnimeList Database Project
 
-A comprehensive database-focused project for a database class, featuring a well-designed PostgreSQL schema populated with real MyAnimeList data via the Jikan API, enhanced with Hugging Face machine learning capabilities, and visualized through a Streamlit web interface.
+## 🎯 Main Features
+
+**Comprehensive Anime Database Application** featuring:
+
+### 🗄️ Core Database Functionality
+- **Complete Anime Database**: 1,400+ anime entries with detailed information (scores, genres, studios, themes)
+- **Advanced Search & Discovery**: Multi-criteria anime search with filtering and sorting capabilities
+- **Character Database**: 10,000+ anime characters with role information and appearance tracking
+- **Data Analytics**: Interactive charts and statistics for anime trends, genre popularity, and studio performn  ance
+
+### 🤖 Machine Learning & AI
+- **Smart Recommendations**: AI-powered anime suggestion system using collaborative filtering
+- **Hidden Gems Finder**: ML algorithm to discover underrated anime based on your preferences
+- **Enhanced ML System**: Integration with 10 years of external MyAnimeList data for superior recommendations
+
+### 📊 Interactive Dashboard
+- **Streamlit Web Interface**: Modern, responsive web application
+- **Real-time Visualizations**: Dynamic charts and graphs using Plotly
+- **Database Insights**: Live statistics and performance metrics
+- **Data Exploration**: Interactive tools for browsing and analyzing anime data
+
+### 🔧 Technical Features
+- **PostgreSQL/SQLite Database**: Well-designed relational schema with 8 tables
+- **API Integration**: Automated data collection via Jikan API (MyAnimeList)
+- **Professional Architecture**: Modular codebase with proper separation of concerns
+
+---
 
 ## Project Overview
 
-This project demonstrates:
-- **Database Design**: Comprehensive relational database schema with 8 tables and proper relationships
-- **Data Ingestion**: Automated pipeline using Jikan API (unofficial MyAnimeList API)
-- **Enhanced ML System**: Professional-grade recommendations using 10 years of external MyAnimeList data (1,219 anime, 73 studios)
-- **Data Visualization**: Interactive Streamlit dashboard focused on ML-powered anime discovery
-- **Smart Recommendations**: AI-driven hidden gems finder and personalized anime suggestions
+This project demonstrates advanced database design and machine learning integration for anime data analysis and recommendation systems.
 
 ## Quick Start
 
